@@ -1,0 +1,26 @@
+import "dotenv/config";
+import express from "express";
+import cors from "cors";
+import mongoose from "mongoose";
+
+for (const key of ["MONGO_URI"]) {
+  if (!process.env[key]) {
+    console.error(`Missing ${key}. Copy server/.env.example to server/.env first.`);
+    process.exit(1);
+  }
+}
+
+const app = express();
+app.use(cors({ origin: process.env.CLIENT_URL || "http://localhost:5173" }));
+app.use(express.json({ limit: "100kb" }));
+
+app.get("/api/health", (req, res) => res.json({ status: "ok" }));
+
+const port = process.env.PORT || 5000;
+mongoose
+  .connect(process.env.MONGO_URI)
+  .then(() => app.listen(port, () => console.log(`SkillMatch API on ${port}`)))
+  .catch((e) => {
+    console.error("Could not connect to MongoDB:", e.message);
+    process.exit(1);
+  });
