@@ -8,6 +8,8 @@ const ref = (model, extra = {}) => ({
   ...extra,
 });
 
+export const DEGREES = ["Certificate", "Diploma", "Bachelor", "Master", "PhD"];
+
 const userSchema = new Schema(
   {
     name: { type: String, required: true, trim: true, minlength: 2, maxlength: 80 },
@@ -26,4 +28,24 @@ const userSchema = new Schema(
   { timestamps: true },
 );
 
+// MAIN ENTITY: Internship (job listing) - full CRUD
+const internshipSchema = new Schema(
+  {
+    company: ref("User", { index: true }),
+    title: { type: String, required: true, trim: true, minlength: 3, maxlength: 100 },
+    description: { type: String, required: true, trim: true, minlength: 10, maxlength: 2000 },
+    requiredSkills: { type: [String], default: [] },
+    minimumDegree: { type: String, enum: DEGREES, default: "Diploma" },
+    preferredField: { type: String, default: "Any", trim: true },
+    minimumGpa: { type: Number, default: 0, min: 0, max: 4 },
+    location: { type: String, default: "Remote", trim: true },
+    openings: { type: Number, default: 1, min: 1, max: 1000 },
+    deadline: Date,
+    active: { type: Boolean, default: true },
+  },
+  { timestamps: true },
+);
+internshipSchema.index({ title: "text", description: "text", requiredSkills: "text" });
+
 export const User = mongoose.model("User", userSchema);
+export const Internship = mongoose.model("Internship", internshipSchema);

@@ -22,3 +22,11 @@ export const allow =
     roles.includes(req.user.role)
       ? next()
       : res.status(403).json({ message: "You do not have permission" });
+      export function validId(req, res, next) {
+        if (!mongoose.isValidObjectId(req.params.id))
+          return res.status(400).json({ message: "Invalid id" });
+        next();
+      }
+      
+      export const wrap = (fn) => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next);
+      
