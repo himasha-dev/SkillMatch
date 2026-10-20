@@ -243,6 +243,171 @@ label {
   transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s, background 0.25s;
 }
 
+/* ---------- Header ---------- */
+header {
+  height: 74px;
+  background: linear-gradient(90deg, var(--navy), var(--navy-2));
+  color: white;
+  padding: 0 max(24px, 5vw);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  box-shadow: 0 4px 18px #0b2a5b33;
+}
+.identity {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.identity div {
+  display: grid;
+  text-align: right;
+}
+.identity small {
+  color: #a9c6f0;
+  text-transform: capitalize;
+}
+.identity > svg {
+  background: #ffffff1f;
+  border-radius: 50%;
+  padding: 8px;
+  width: 38px;
+  height: 38px;
+  transition: background 0.2s, transform 0.2s;
+}
+.iconbtn {
+  padding: 9px;
+  background: transparent;
+}
+.iconbtn.dark {
+  color: var(--text);
+}
+
+/* ---------- Page layout ---------- */
+.wrap {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 58px 24px 80px;
+}
+.wrap.narrow {
+  max-width: 800px;
+}
+.welcome {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 25px;
+  margin-bottom: 28px;
+}
+.welcome h1 {
+  font-size: 42px;
+}
+.welcome p {
+  margin: 0;
+}
+.eyebrow,
+.status {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  color: var(--primary);
+}
+.secondary {
+  background: white;
+  color: var(--primary);
+  border: 1px solid var(--border-strong);
+}
+.grid {
+  display: grid;
+  gap: 16px;
+}
+.stats {
+  grid-template-columns: repeat(3, 1fr);
+}
+.stats.five {
+  grid-template-columns: repeat(5, 1fr);
+}
+.stat b {
+  font: 800 32px Manrope;
+  color: var(--navy);
+}
+.stat span {
+  display: block;
+  color: var(--muted-2);
+  font-size: 13px;
+}
+.cards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+/* ---------- Jobs ---------- */
+.jobtop {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.job h3,
+.match h3 {
+  margin: 8px 0;
+}
+.job p {
+  margin-top: 8px;
+}
+.job small,
+.tr small,
+.match small {
+  display: block;
+  color: var(--muted-2);
+  margin-top: 12px;
+}
+.job > button {
+  margin-top: 18px;
+  width: 100%;
+}
+.job > button:disabled {
+  background: #a9b8d1;
+  cursor: default;
+}
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 12px 0;
+}
+.tags span {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--tag-text);
+  background: var(--tag-bg);
+  padding: 5px 8px;
+  border-radius: 6px;
+  transition: background 0.2s, color 0.2s, transform 0.2s;
+}
+
+/* ---------- Forms ---------- */
+.formgrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  margin: 24px 0;
+}
+.wide {
+  grid-column: 1/-1;
+}
+.empty {
+  text-align: center;
+  grid-column: 1/-1;
+  color: var(--muted-2);
+}
+.empty svg {
+  width: 34px;
+}
+
 .loading {
   height: 100vh;
   display: grid;
@@ -256,6 +421,21 @@ button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
+.row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.row.end {
+  justify-content: flex-end;
+}
+.clamp {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
 .chip {
   padding: 6px 12px;
   font-size: 12px;
@@ -264,4 +444,62 @@ button:disabled {
 }
 .demo .row {
   margin-top: 8px;
+}
+.pill {
+  margin-left: auto;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 99px;
+}
+.pill.on {
+  background: #dcf5e6;
+  color: #166534;
+}
+.pill.off {
+  background: #f6e1e1;
+  color: #a32e2e;
+}
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: #06173a99;
+  backdrop-filter: blur(3px);
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  z-index: 50;
+  overflow-y: auto;
+  animation: fadein 0.2s ease;
+}
+.modal {
+  width: min(720px, 100%);
+  max-height: 92vh;
+  overflow-y: auto;
+  background: #fff;
+  animation: popin 0.25s ease;
+}
+@keyframes fadein {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes popin {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.98);
+  }
+}
+.modalhead {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+.modalhead h2 {
+  margin: 0 0 8px;
+  font-size: 22px;
+}
+.modal .formgrid {
+  margin: 16px 0 0;
 }
