@@ -460,6 +460,13 @@ button:disabled {
   background: #f6e1e1;
   color: #a32e2e;
 }
+.jobactions {
+  margin-top: 16px;
+}
+.jobactions button {
+  flex: 1 1 auto;
+  padding: 10px 12px;
+}
 .overlay {
   position: fixed;
   inset: 0;

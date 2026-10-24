@@ -2,9 +2,24 @@ import React, { useState } from "react";
 import { api } from "../api.js";
 import { DEGREES, Modal } from "../components/ui.jsx";
 
-export default function JobForm({ onClose, onSaved }) {
+const toDateInput = (d) => (d ? new Date(d).toISOString().slice(0, 10) : "");
+
+export default function JobForm({ job, onClose, onSaved }) {
   const [f, setF] = useState(
-    {
+    job
+      ? {
+          title: job.title,
+          description: job.description,
+          requiredSkills: job.requiredSkills.join(", "),
+          minimumDegree: job.minimumDegree,
+          preferredField: job.preferredField,
+          minimumGpa: job.minimumGpa,
+          location: job.location,
+          openings: job.openings,
+          deadline: toDateInput(job.deadline),
+          active: job.active,
+        }
+      : {
           title: "",
           description: "",
           requiredSkills: "",
@@ -33,7 +48,7 @@ export default function JobForm({ onClose, onSaved }) {
         requiredSkills: f.requiredSkills.split(",").map((x) => x.trim()).filter(Boolean),
         deadline: f.deadline || null,
       };
-      await api("/internships", { method: "POST", body: JSON.stringify(body) });
+      await api(job ? `/internships/${job._id}` : "/internships", { method: job ? "PUT" : "POST", body: JSON.stringify(body) });
       onSaved();
     } catch (err) {
       setError(err.message);
@@ -43,7 +58,7 @@ export default function JobForm({ onClose, onSaved }) {
   };
 
   return (
-    <Modal title={"New job listing"} onClose={onClose}>
+    <Modal title={job ? "Edit job listing" : "New job listing"} onClose={onClose}>
       {error && <div className="error">{error}</div>}
       <form className="formgrid" onSubmit={save}>
         <label>
@@ -86,11 +101,20 @@ export default function JobForm({ onClose, onSaved }) {
           Application deadline
           <input type="date" value={f.deadline} onChange={set("deadline")} />
         </label>
+        {job && (
+          <label>
+            Status
+            <select value={f.active ? "active" : "closed"} onChange={(e) => setF({ ...f, active: e.target.value === "active" })}>
+              <option value="active">Active (visible to candidates)</option>
+              <option value="closed">Closed</option>
+            </select>
+          </label>
+        )}
         <div className="wide row end">
           <button type="button" className="secondary" onClick={onClose}>
             Cancel
           </button>
-          <button disabled={busy}>{busy ? "Saving..." : "Publish listing"}</button>
+          <button disabled={busy}>{busy ? "Saving..." : job ? "Save changes" : "Publish listing"}</button>
         </div>
       </form>
     </Modal>

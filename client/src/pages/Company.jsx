@@ -5,7 +5,7 @@ import JobBrowser from "./JobBrowser.jsx";
 import JobForm from "./JobForm.jsx";
 
 export default function Company() {
-  const [form, setForm] = useState(false);
+  const [form, setForm] = useState(null); // null | "new" | job
   const [reloadKey, setReloadKey] = useState(0);
   const [total, setTotal] = useState(0);
 
@@ -17,7 +17,7 @@ export default function Company() {
           <h1>Find your next standout hire.</h1>
           <p>Create clear requirements and let SkillMatch surface the fit.</p>
         </div>
-        <button onClick={() => setForm(true)}>
+        <button onClick={() => setForm("new")}>
           <Plus /> New job
         </button>
       </div>
@@ -29,13 +29,15 @@ export default function Company() {
       <JobBrowser
         reloadKey={reloadKey}
         onTotal={setTotal}
+        onEdit={(j) => setForm(j)}
       />
 
       {form && (
         <JobForm
-          onClose={() => setForm(false)}
+          job={form === "new" ? null : form}
+          onClose={() => setForm(null)}
           onSaved={() => {
-            setForm(false);
+            setForm(null);
             setReloadKey((k) => k + 1);
           }}
         />

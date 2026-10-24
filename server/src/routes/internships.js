@@ -65,4 +65,20 @@ router.post(
   }),
 );
 
+// UPDATE
+router.put(
+  "/:id",
+  allow("company"),
+  validId,
+  wrap(async (req, res) => {
+    const item = await Internship.findOneAndUpdate(
+      { _id: req.params.id, company: req.user._id },
+      pick(req.body),
+      { new: true, runValidators: true },
+    );
+    if (!item) return res.status(404).json({ message: "Listing not found" });
+    res.json(item);
+  }),
+);
+
 export default router;

@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Briefcase } from "lucide-react";
+import { Briefcase, Pencil } from "lucide-react";
 import { api } from "../api.js";
 import { Empty, Tags } from "../components/ui.jsx";
 
 // Lists the company's job records
-export default function JobBrowser({ reloadKey, onTotal }) {
+export default function JobBrowser({ reloadKey, onTotal, onEdit }) {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -45,6 +45,11 @@ export default function JobBrowser({ reloadKey, onTotal }) {
               {j.openings} opening(s) · Min GPA {j.minimumGpa}
               {j.deadline && ` · Closes ${new Date(j.deadline).toLocaleDateString()}`}
             </small>
+            <div className="row jobactions">
+              <button className="secondary" onClick={() => onEdit(j)} aria-label={`Edit ${j.title}`}>
+                <Pencil /> Edit
+              </button>
+            </div>
           </div>
         ))}
       </div>
