@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { Target, LogOut, GraduationCap, Building2, ShieldCheck } from "lucide-react";
 import { api } from "./api.js";
+import { ToastProvider } from "./components/ui.jsx";
 import Auth from "./pages/Auth.jsx";
 import Company from "./pages/Company.jsx";
 import "./style.css";
@@ -60,4 +61,8 @@ function App() {
   );
 }
 
-createRoot(document.getElementById("root")).render(<App />);
+createRoot(document.getElementById("root")).render(
+  <ToastProvider>
+    <App />
+  </ToastProvider>,
+);

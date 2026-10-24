@@ -421,6 +421,9 @@ button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
+button.danger {
+  background: var(--danger);
+}
 .row {
   display: flex;
   gap: 10px;
@@ -509,4 +512,22 @@ button:disabled {
 }
 .modal .formgrid {
   margin: 16px 0 0;
+}
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 12px 20px;
+  border-radius: 10px;
+  color: #fff;
+  font-weight: 600;
+  background: var(--primary);
+  z-index: 100;
+  box-shadow: 0 8px 30px #0003;
+  max-width: 90vw;
+  animation: popin 0.25s ease;
+}
+.toast.error {
+  background: var(--danger);
 }

@@ -49,6 +49,9 @@ export default function JobBrowser({ reloadKey, onTotal, onEdit }) {
               <button className="secondary" onClick={() => onEdit(j)} aria-label={`Edit ${j.title}`}>
                 <Pencil /> Edit
               </button>
+              <button className="danger" onClick={() => onDelete(j)} aria-label={`Delete ${j.title}`}>
+              <Trash2 /> Delete
+               </button>
             </div>
           </div>
         ))}
