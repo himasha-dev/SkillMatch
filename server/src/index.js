@@ -4,8 +4,9 @@ import cors from "cors";
 import mongoose from "mongoose";
 import authRoutes from "./routes/auth.js";
 import internshipRoutes from "./routes/internships.js";
+import { notFound, errorHandler } from "./middleware.js";
 
-for (const key of ["MONGO_URI"]) {
+for (const key of ["MONGO_URI", "JWT_SECRET"]) {
   if (!process.env[key]) {
     console.error(`Missing ${key}. Copy server/.env.example to server/.env first.`);
     process.exit(1);
@@ -19,6 +20,8 @@ app.use(express.json({ limit: "100kb" }));
 app.get("/api/health", (req, res) => res.json({ status: "ok" }));
 app.use("/api/auth", authRoutes);
 app.use("/api/internships", internshipRoutes);
+app.use(notFound);
+app.use(errorHandler);
 
 const port = process.env.PORT || 5000;
 mongoose

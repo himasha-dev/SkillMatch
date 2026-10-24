@@ -1,10 +1,29 @@
 import React, { useState } from "react";
 import { Target } from "lucide-react";
 import { api } from "../api.js";
+import { Field } from "../components/ui.jsx";
+
+const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+function validate(f, login) {
+  const e = {};
+  if (!EMAIL.test(f.email.trim())) e.email = "Enter a valid email address";
+  if (login) {
+    if (!f.password) e.password = "Password is required";
+    return e;
+  }
+  if (f.name.trim().length < 2) e.name = "Name must be at least 2 characters";
+  if (f.password.length < 8) e.password = "Password must be at least 8 characters";
+  else if (!/[A-Za-z]/.test(f.password) || !/\d/.test(f.password))
+    e.password = "Use both letters and numbers";
+  if (f.role === "company" && !f.organization.trim()) e.organization = "Organization is required";
+  return e;
+}
 
 export default function Auth({ onLogin }) {
   const [login, setLogin] = useState(true);
   const [form, setForm] = useState({ name: "", email: "", password: "", role: "student", organization: "" });
+  const [errors, setErrors] = useState({});
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   const set = (k) => (e) => setForm({ ...form, [k]: e.target.value });
@@ -12,6 +31,9 @@ export default function Auth({ onLogin }) {
   const submit = async (e) => {
     e.preventDefault();
     setError("");
+    const v = validate(form, login);
+    setErrors(v);
+    if (Object.keys(v).length) return;
     setBusy(true);
     try {
       const data = await api(`/auth/${login ? "login" : "register"}`, {
@@ -22,10 +44,12 @@ export default function Auth({ onLogin }) {
       onLogin(data.user);
     } catch (err) {
       setError(err.message);
+      if (err.errors) setErrors(err.errors);
     } finally {
       setBusy(false);
     }
   };
+
 
   return (
     <main className="auth">
@@ -55,36 +79,36 @@ export default function Auth({ onLogin }) {
           <h2>{login ? "Welcome back" : "Create an account"}</h2>
           <p>{login ? "Sign in to continue to your dashboard." : "Join as a candidate or company."}</p>
           {error && <div className="error" role="alert">{error}</div>}
-          <form onSubmit={submit}>
+          <form onSubmit={submit} noValidate>
             {!login && (
               <>
-                <label>Full name
+                <Field label="Full name" error={errors.name}>
                   <input value={form.name} onChange={set("name")} />
-                </label>
-                <label>Account type
+                </Field>
+                <Field label="Account type" error={errors.role}>
                   <select value={form.role} onChange={set("role")}>
                     <option value="student">Candidate</option>
                     <option value="company">Company</option>
                   </select>
-                </label>
+                </Field>
                 {form.role === "company" && (
-                  <label>Organization
+                  <Field label="Organization" error={errors.organization}>
                     <input value={form.organization} onChange={set("organization")} />
-                  </label>
+                  </Field>
                 )}
               </>
             )}
-            <label>Email
+            <Field label="Email" error={errors.email}>
               <input type="email" value={form.email} onChange={set("email")} autoComplete="email" />
-            </label>
-            <label>Password
+            </Field>
+            <Field label="Password" error={errors.password}>
               <input
                 type="password"
                 value={form.password}
                 onChange={set("password")}
                 autoComplete={login ? "current-password" : "new-password"}
               />
-            </label>
+            </Field>
             <button disabled={busy}>{busy ? "Please wait..." : "Continue"} <span>→</span></button>
           </form>
           <p className="switch">
@@ -92,6 +116,7 @@ export default function Auth({ onLogin }) {
             <a
               onClick={() => {
                 setLogin(!login);
+                setErrors({});
                 setError("");
               }}
             >

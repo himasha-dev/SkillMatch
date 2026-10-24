@@ -25,6 +25,15 @@ export const Empty = ({ text }) => (
   </div>
 );
 
+// Label + control + inline error message
+export const Field = ({ label, error, className = "", children }) => (
+  <label className={`${className} ${error ? "invalid" : ""}`}>
+    {label}
+    {children}
+    {error && <span className="fielderror">{error}</span>}
+  </label>
+);
+
 export function Modal({ title, onClose, children }) {
   return (
     <div className="overlay" onMouseDown={(e) => e.target === e.currentTarget && onClose()}>

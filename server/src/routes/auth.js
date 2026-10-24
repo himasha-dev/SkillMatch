@@ -2,7 +2,8 @@ import { Router } from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { User } from "../models.js";
-import { auth } from "../middleware.js";
+import { auth, wrap } from "../middleware.js";
+import { validateRegistration, sendInvalid } from "../validators.js";
 
 const router = Router();
 const tokenFor = (u) =>
@@ -15,39 +16,38 @@ const publicUser = (u) => ({
   organization: u.organization,
 });
 
-router.post("/register", async (req, res) => {
-  try {
-    const { name, email, password, role, organization } = req.body;
-    if (!name || !email || !password)
-      return res.status(400).json({ message: "Name, email and password are required" });
-    if (!["student", "company"].includes(role))
-      return res.status(400).json({ message: "Choose candidate or company" });
-    if (await User.findOne({ email: String(email).toLowerCase() }))
-      return res.status(409).json({ message: "Email already registered" });
+router.post(
+  "/register",
+  wrap(async (req, res) => {
+    const errors = validateRegistration(req.body);
+    if (Object.keys(errors).length) return sendInvalid(res, errors);
+    const email = req.body.email.trim().toLowerCase();
+    if (await User.findOne({ email }))
+      return res.status(409).json({ message: "Email already registered", errors: { email: "Email already registered" } });
     const user = await User.create({
-      name,
+      name: req.body.name.trim(),
       email,
-      password: await bcrypt.hash(password, 12),
-      role,
-      organization: role === "company" ? organization : undefined,
+      password: await bcrypt.hash(req.body.password, 12),
+      role: req.body.role,
+      organization: req.body.role === "company" ? req.body.organization.trim() : undefined,
     });
     res.status(201).json({ token: tokenFor(user), user: publicUser(user) });
-  } catch (err) {
-    res.status(400).json({ message: err.message });
-  }
-});
+  }),
+);
 
-router.post("/login", async (req, res) => {
-  try {
-    const email = String(req.body.email || "").toLowerCase();
+router.post(
+  "/login",
+  wrap(async (req, res) => {
+    const email = String(req.body.email || "").trim().toLowerCase();
+    const password = String(req.body.password || "");
+    if (!email || !password)
+      return res.status(400).json({ message: "Email and password are required" });
     const user = await User.findOne({ email });
-    if (!user || !(await bcrypt.compare(String(req.body.password || ""), user.password)))
+    if (!user || !(await bcrypt.compare(password, user.password)))
       return res.status(401).json({ message: "Invalid email or password" });
     res.json({ token: tokenFor(user), user: publicUser(user) });
-  } catch (err) {
-    res.status(500).json({ message: "Login failed" });
-  }
-});
+  }),
+);
 
 router.get("/me", auth, (req, res) => res.json(publicUser(req.user)));
 

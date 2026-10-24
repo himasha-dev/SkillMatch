@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { Internship } from "../models.js";
 import { auth, allow, validId, wrap } from "../middleware.js";
+import { validateInternship, cleanSkills, sendInvalid } from "../validators.js";
 
 const router = Router();
 router.use(auth);
@@ -19,8 +20,7 @@ const pick = (b) => {
     "active",
   ])
     if (b[k] !== undefined) out[k] = b[k] === "" ? undefined : b[k];
-  if (b.requiredSkills !== undefined)
-    out.requiredSkills = b.requiredSkills.map((s) => String(s).trim()).filter(Boolean);
+  if (b.requiredSkills !== undefined) out.requiredSkills = cleanSkills(b.requiredSkills);
   return out;
 };
 
@@ -58,8 +58,8 @@ router.post(
   "/",
   allow("company"),
   wrap(async (req, res) => {
-    if (!req.body.title?.trim() || !req.body.description?.trim())
-      return res.status(400).json({ message: "Title and description are required" });
+    const errors = validateInternship(req.body);
+    if (Object.keys(errors).length) return sendInvalid(res, errors);
     const item = await Internship.create({ ...pick(req.body), company: req.user._id });
     res.status(201).json(item);
   }),
@@ -71,6 +71,8 @@ router.put(
   allow("company"),
   validId,
   wrap(async (req, res) => {
+    const errors = validateInternship(req.body, { partial: true });
+    if (Object.keys(errors).length) return sendInvalid(res, errors);
     const item = await Internship.findOneAndUpdate(
       { _id: req.params.id, company: req.user._id },
       pick(req.body),

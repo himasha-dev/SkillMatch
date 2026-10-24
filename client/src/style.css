@@ -439,6 +439,17 @@ button.danger {
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+.fielderror {
+  color: #a32e2e;
+  font-size: 12px;
+  font-weight: 600;
+}
+label.invalid input,
+label.invalid select,
+label.invalid textarea {
+  border-color: #cc4444;
+  background: #fff9f9;
+}
 .chip {
   padding: 6px 12px;
   font-size: 12px;
