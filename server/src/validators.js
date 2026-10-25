@@ -39,6 +39,18 @@ export function validateInternship(b, { partial = false } = {}) {
   return e;
 }
 
+export function validateProfile(b) {
+  const e = {};
+  if (!DEGREES.includes(b.degree)) e.degree = "Choose a valid degree";
+  if (String(b.field || "").trim().length < 2) e.field = "Field of study is required";
+  if (!(Number(b.gpa) >= 0 && Number(b.gpa) <= 4) || b.gpa === "" || b.gpa === null)
+    e.gpa = "GPA must be between 0 and 4";
+  if (b.experienceMonths !== undefined && !(Number(b.experienceMonths) >= 0))
+    e.experienceMonths = "Experience cannot be negative";
+  if (!Array.isArray(b.skills) || b.skills.length === 0) e.skills = "Add at least one skill";
+  return e;
+}
+
 export const cleanSkills = (arr) =>
   [...new Set((Array.isArray(arr) ? arr : []).map((s) => String(s).trim()).filter(Boolean))];
 

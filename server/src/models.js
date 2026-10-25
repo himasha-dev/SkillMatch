@@ -28,6 +28,20 @@ const userSchema = new Schema(
   { timestamps: true },
 );
 
+const studentSchema = new Schema(
+  {
+    user: ref("User", { unique: true }),
+    degree: { type: String, enum: DEGREES, required: true },
+    field: { type: String, required: true, trim: true, maxlength: 80 },
+    gpa: { type: Number, min: 0, max: 4, required: true },
+    skills: { type: [String], default: [] },
+    experienceMonths: { type: Number, default: 0, min: 0, max: 600 },
+    location: { type: String, default: "Remote", trim: true, maxlength: 80 },
+    bio: { type: String, maxlength: 500 },
+  },
+  { timestamps: true },
+);
+
 // MAIN ENTITY: Internship (job listing) - full CRUD
 const internshipSchema = new Schema(
   {
@@ -48,4 +62,5 @@ const internshipSchema = new Schema(
 internshipSchema.index({ title: "text", description: "text", requiredSkills: "text" });
 
 export const User = mongoose.model("User", userSchema);
+export const Student = mongoose.model("Student", studentSchema);
 export const Internship = mongoose.model("Internship", internshipSchema);

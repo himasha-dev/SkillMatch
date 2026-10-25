@@ -3,6 +3,7 @@ import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
 import authRoutes from "./routes/auth.js";
+import studentRoutes from "./routes/students.js";
 import internshipRoutes from "./routes/internships.js";
 import { notFound, errorHandler } from "./middleware.js";
 
@@ -19,6 +20,7 @@ app.use(express.json({ limit: "100kb" }));
 
 app.get("/api/health", (req, res) => res.json({ status: "ok" }));
 app.use("/api/auth", authRoutes);
+app.use("/api/students", studentRoutes);
 app.use("/api/internships", internshipRoutes);
 app.use(notFound);
 app.use(errorHandler);
