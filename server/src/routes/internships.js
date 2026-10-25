@@ -1,10 +1,19 @@
 import { Router } from "express";
 import { Internship } from "../models.js";
 import { auth, allow, validId, wrap } from "../middleware.js";
-import { validateInternship, cleanSkills, sendInvalid } from "../validators.js";
+import { validateInternship, cleanSkills, escapeRegex, sendInvalid } from "../validators.js";
 
 const router = Router();
 router.use(auth);
+
+const SORTS = {
+  newest: { createdAt: -1 },
+  oldest: { createdAt: 1 },
+  title: { title: 1 },
+  deadline: { deadline: 1 },
+  openings: { openings: -1 },
+  gpa: { minimumGpa: 1 },
+};
 
 const pick = (b) => {
   const out = {};
@@ -24,17 +33,33 @@ const pick = (b) => {
   return out;
 };
 
-// READ (list)
+// READ (list) with search, filter, sort and pagination
 router.get(
   "/",
   wrap(async (req, res) => {
+    const { search, location, degree, status, sort = "newest" } = req.query;
+    const page = Math.max(1, parseInt(req.query.page) || 1);
+    const limit = Math.min(50, Math.max(1, parseInt(req.query.limit) || 12));
     const q = {};
     if (req.user.role === "company") q.company = req.user._id;
     if (req.user.role === "student") q.active = true;
-    const items = await Internship.find(q)
-      .populate("company", "name organization email")
-      .sort({ createdAt: -1 });
-    res.json({ items, total: items.length, page: 1, pages: 1 });
+    if (req.user.role !== "student" && ["active", "closed"].includes(status))
+      q.active = status === "active";
+    if (search?.trim()) {
+      const rx = new RegExp(escapeRegex(search.trim()), "i");
+      q.$or = [{ title: rx }, { description: rx }, { requiredSkills: rx }];
+    }
+    if (location?.trim()) q.location = new RegExp(`^${escapeRegex(location.trim())}$`, "i");
+    if (degree) q.minimumDegree = String(degree);
+    const [items, total] = await Promise.all([
+      Internship.find(q)
+        .populate("company", "name organization email")
+        .sort(SORTS[sort] || SORTS.newest)
+        .skip((page - 1) * limit)
+        .limit(limit),
+      Internship.countDocuments(q),
+    ]);
+    res.json({ items, total, page, pages: Math.max(1, Math.ceil(total / limit)) });
   }),
 );
 

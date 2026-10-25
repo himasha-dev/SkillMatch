@@ -26,3 +26,10 @@ export async function api(path, options = {}) {
   if (!res.ok) throw new ApiError(data.message || "Request failed", data.errors, res.status);
   return data;
 }
+
+export const qs = (params) => {
+  const p = new URLSearchParams();
+  Object.entries(params).forEach(([k, v]) => v !== "" && v != null && p.set(k, v));
+  const s = p.toString();
+  return s ? `?${s}` : "";
+};

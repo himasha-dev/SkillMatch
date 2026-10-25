@@ -433,6 +433,12 @@ button.danger {
 .row.end {
   justify-content: flex-end;
 }
+.muted {
+  color: var(--muted);
+}
+.prewrap {
+  white-space: pre-wrap;
+}
 .clamp {
   display: -webkit-box;
   -webkit-line-clamp: 3;
@@ -459,6 +465,38 @@ label.invalid textarea {
 .demo .row {
   margin-top: 8px;
 }
+.toolbar {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+  padding: 14px;
+  margin-bottom: 8px;
+}
+.toolbar > input,
+.toolbar > select {
+  width: auto;
+  flex: 1 1 140px;
+}
+.searchbox {
+  position: relative;
+  flex: 2 1 240px;
+}
+.searchbox svg {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  color: var(--muted-2);
+}
+.searchbox input {
+  padding-left: 40px;
+}
+.count {
+  margin: 8px 2px 14px;
+  font-size: 14px;
+}
 .pill {
   margin-left: auto;
   font-size: 11px;
@@ -480,6 +518,13 @@ label.invalid textarea {
 .jobactions button {
   flex: 1 1 auto;
   padding: 10px 12px;
+}
+.pager {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  margin-top: 22px;
 }
 .overlay {
   position: fixed;
@@ -523,6 +568,29 @@ label.invalid textarea {
 }
 .modal .formgrid {
   margin: 16px 0 0;
+}
+.facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+  margin: 18px 0;
+}
+.facts div {
+  background: #f0f5ff;
+  border-radius: 10px;
+  padding: 10px 12px;
+  transition: background 0.2s, transform 0.2s;
+}
+.facts dt {
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--muted-2);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.facts dd {
+  margin: 2px 0 0;
+  font-weight: 700;
 }
 .toast {
   position: fixed;

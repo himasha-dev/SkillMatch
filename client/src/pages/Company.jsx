@@ -3,11 +3,13 @@ import { Plus } from "lucide-react";
 import { api } from "../api.js";
 import { Confirm, Stat, useToast } from "../components/ui.jsx";
 import JobBrowser from "./JobBrowser.jsx";
+import JobDetail from "./JobDetail.jsx";
 import JobForm from "./JobForm.jsx";
 
 export default function Company() {
   const notify = useToast();
   const [form, setForm] = useState(null); // null | "new" | job
+  const [viewId, setViewId] = useState(null);
   const [toDelete, setToDelete] = useState(null);
   const [busy, setBusy] = useState(false);
   const [reloadKey, setReloadKey] = useState(0);
@@ -47,6 +49,7 @@ export default function Company() {
       <JobBrowser
         reloadKey={reloadKey}
         onTotal={setTotal}
+        onView={(j) => setViewId(j._id)}
         onEdit={(j) => setForm(j)}
         onDelete={(j) => setToDelete(j)}
       />
@@ -59,6 +62,34 @@ export default function Company() {
             setForm(null);
             setReloadKey((k) => k + 1);
           }}
+        />
+      )}
+      {viewId && (
+        <JobDetail
+          id={viewId}
+          onClose={() => setViewId(null)}
+          actions={(job) => (
+            <div className="row end">
+              <button
+                className="secondary"
+                onClick={() => {
+                  setViewId(null);
+                  setForm(job);
+                }}
+              >
+                Edit
+              </button>
+              <button
+                className="danger"
+                onClick={() => {
+                  setViewId(null);
+                  setToDelete(job);
+                }}
+              >
+                Delete
+              </button>
+            </div>
+          )}
         />
       )}
       {toDelete && (
