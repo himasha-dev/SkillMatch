@@ -399,6 +399,13 @@ header {
 .wide {
   grid-column: 1/-1;
 }
+.skillinput {
+  display: flex;
+  gap: 8px;
+}
+.skillinput button {
+  padding: 8px 18px;
+}
 .empty {
   text-align: center;
   grid-column: 1/-1;
@@ -591,6 +598,18 @@ label.invalid textarea {
 .facts dd {
   margin: 2px 0 0;
   font-weight: 700;
+}
+.tags.removable button {
+  background: none;
+  color: var(--tag-text);
+  padding: 0 0 0 6px;
+  font-size: 14px;
+  border-radius: 0;
+  box-shadow: none;
+}
+.tags.removable span {
+  display: inline-flex;
+  align-items: center;
 }
 .toast {
   position: fixed;

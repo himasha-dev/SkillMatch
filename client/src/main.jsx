@@ -4,6 +4,7 @@ import { Target, LogOut, GraduationCap, Building2, ShieldCheck } from "lucide-re
 import { api } from "./api.js";
 import { ToastProvider } from "./components/ui.jsx";
 import Auth from "./pages/Auth.jsx";
+import Student from "./pages/Student.jsx";
 import Company from "./pages/Company.jsx";
 import "./style.css";
 
