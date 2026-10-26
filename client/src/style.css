@@ -406,6 +406,34 @@ header {
 .skillinput button {
   padding: 8px 18px;
 }
+
+/* ---------- Matches ---------- */
+.match {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+.ring {
+  min-width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: conic-gradient(var(--primary) var(--p), #e1eaf8 0);
+  position: relative;
+}
+.ring:after {
+  content: "";
+  position: absolute;
+  inset: 8px;
+  background: white;
+  border-radius: 50%;
+}
+.ring b {
+  z-index: 1;
+  font: 800 18px Manrope;
+  color: var(--navy);
+}
 .empty {
   text-align: center;
   grid-column: 1/-1;
@@ -725,4 +753,15 @@ label.invalid textarea {
 }
 .toast.error {
   background: var(--danger);
+}
+.matchbox {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: center;
+  padding: 36px;
+}
+.matchbox h2 {
+  text-align: left;
+  margin: 0 0 12px;
 }

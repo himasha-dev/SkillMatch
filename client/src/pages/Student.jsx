@@ -1,13 +1,32 @@
 import React, { useEffect, useState } from "react";
 import { Trash2, Undo2 } from "lucide-react";
 import { api } from "../api.js";
-import { Confirm, Empty, Field, Modal, Stat, useToast } from "../components/ui.jsx";
+import { Confirm, Empty, Field, Modal, Stat, Tags, useToast } from "../components/ui.jsx";
 import Profile from "./Profile.jsx";
 import JobBrowser from "./JobBrowser.jsx";
 import JobDetail from "./JobDetail.jsx";
 
 const STAGES = ["reviewing", "shortlisted", "interview", "offered"];
 const reached = (status, i) => STAGES.indexOf(status) >= i;
+
+function MatchCard({ m }) {
+  return (
+    <div className="card match">
+      <div className="ring" style={{ "--p": `${m.score * 3.6}deg` }}>
+        <b>{m.score}%</b>
+      </div>
+      <div>
+        <span className="status">APPROVED MATCH</span>
+        <h3>{m.internship?.title}</h3>
+        <p>
+          {m.internship?.company?.organization} · {m.internship?.location}
+        </p>
+        <Tags items={m.matchedSkills} />
+        {m.missingSkills.length > 0 && <small>Develop next: {m.missingSkills.join(", ")}</small>}
+      </div>
+    </div>
+  );
+}
 
 function ApplyModal({ job, onClose, onDone }) {
   const notify = useToast();
@@ -48,6 +67,7 @@ function ApplyModal({ job, onClose, onDone }) {
 export default function Student() {
   const notify = useToast();
   const [profile, setProfile] = useState(undefined);
+  const [matches, setMatches] = useState([]);
   const [applications, setApplications] = useState([]);
   const [editing, setEditing] = useState(false);
   const [error, setError] = useState("");
@@ -59,9 +79,10 @@ export default function Student() {
   const [total, setTotal] = useState(0);
 
   const load = () =>
-    Promise.all([api("/students/profile"), api("/applications")])
-      .then(([p, a]) => {
+    Promise.all([api("/students/profile"), api("/matches"), api("/applications")])
+      .then(([p, m, a]) => {
         setProfile(p);
+        setMatches(m);
         setApplications(a);
         setEditing(!p);
         setReloadKey((k) => k + 1);
@@ -156,6 +177,15 @@ export default function Student() {
           ))
         ) : (
           <Empty text="Apply to a job to start tracking your progress." />
+        )}
+      </div>
+
+      <h2>Your smart matches</h2>
+      <div className="cards">
+        {matches.length ? (
+          matches.map((m) => <MatchCard key={m._id} m={m} />)
+        ) : (
+          <Empty text="No approved matches yet. The admin will publish results here." />
         )}
       </div>
 
