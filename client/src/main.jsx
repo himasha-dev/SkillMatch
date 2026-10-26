@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import { Target, LogOut, GraduationCap, Building2, ShieldCheck } from "lucide-react";
 import { api } from "./api.js";
 import { ToastProvider } from "./components/ui.jsx";
+import Home from "./pages/Home.jsx";
 import Auth from "./pages/Auth.jsx";
 import Student from "./pages/Student.jsx";
 import Company from "./pages/Company.jsx";
@@ -41,6 +42,7 @@ function Shell({ user, onLogout, children }) {
 function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(!!localStorage.getItem("token"));
+  const [view, setView] = useState("home"); // home | login | register (logged-out only)
 
   useEffect(() => {
     if (!localStorage.getItem("token")) return;
@@ -51,10 +53,14 @@ function App() {
   }, []);
 
   if (loading) return <div className="loading">SkillMatch</div>;
-  if (!user) return <Auth onLogin={setUser} />;
+  if (!user) {
+    if (view === "home") return <Home onSignIn={() => setView("login")} onRegister={() => setView("register")} />;
+    return <Auth initialLogin={view === "login"} onLogin={setUser} onBack={() => setView("home")} />;
+  }
   const logout = () => {
     localStorage.removeItem("token");
     setUser(null);
+    setView("home");
   };
   return (
     <Shell user={user} onLogout={logout}>

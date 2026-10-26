@@ -192,6 +192,9 @@ label {
   color: #bcd3f5;
   font-size: 13px;
 }
+.steps span {
+  transition: color 0.2s, transform 0.2s;
+}
 .authbox {
   display: grid;
   place-items: center;
@@ -754,6 +757,118 @@ label.invalid textarea {
 .toast.error {
   background: var(--danger);
 }
+
+/* ---------- Home (landing) page ---------- */
+html {
+  scroll-behavior: smooth;
+}
+.homebar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px max(24px, 5vw);
+  background: #ffffffd9;
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+}
+.homebar .brand {
+  color: var(--navy);
+}
+.homebar nav {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+.homebar nav a {
+  color: var(--muted);
+  font-weight: 700;
+  font-size: 14px;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.homebar nav button {
+  padding: 9px 16px;
+}
+.homehero {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 90px 24px 70px;
+  text-align: center;
+}
+.homehero h1 {
+  font-size: clamp(2.4rem, 6vw, 4.8rem);
+  color: var(--navy);
+  margin: 16px 0 20px;
+}
+.homehero h1 em {
+  font-style: normal;
+  color: var(--primary);
+}
+.homehero p {
+  font-size: 18px;
+  max-width: 680px;
+  margin: 0 auto 32px;
+}
+.row.center {
+  justify-content: center;
+}
+.homesec {
+  max-width: 1150px;
+  margin: 0 auto;
+  padding: 40px 24px;
+}
+.homesec > h2 {
+  text-align: center;
+  font-size: 32px;
+  color: var(--navy);
+  margin: 0 0 28px;
+}
+.homegrid {
+  display: grid;
+  gap: 16px;
+}
+.homegrid.four {
+  grid-template-columns: repeat(4, 1fr);
+}
+.homegrid.three {
+  grid-template-columns: repeat(3, 1fr);
+}
+.stepicon {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: var(--tag-bg);
+  color: var(--primary);
+  margin-bottom: 12px;
+  transition: background 0.2s, color 0.2s;
+}
+.stepicon svg {
+  width: 24px;
+}
+.step small {
+  color: var(--primary);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 11px;
+}
+.step h3,
+.role h3 {
+  margin: 6px 0;
+}
+.role ul {
+  margin: 12px 0 0;
+  padding-left: 20px;
+  color: var(--muted);
+  display: grid;
+  gap: 6px;
+}
 .matchbox {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -764,4 +879,78 @@ label.invalid textarea {
 .matchbox h2 {
   text-align: left;
   margin: 0 0 12px;
+}
+.weights {
+  display: grid;
+  gap: 14px;
+}
+.weights > div > span {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+.weights b {
+  color: var(--primary);
+}
+.bar {
+  height: 9px;
+  border-radius: 9px;
+  background: #dfe8f6;
+  overflow: hidden;
+}
+.bar i {
+  display: block;
+  height: 100%;
+  border-radius: 9px;
+  background: linear-gradient(90deg, var(--primary), var(--accent));
+}
+.homecta {
+  max-width: 800px;
+  margin: 30px auto 0;
+  padding: 60px 24px;
+  text-align: center;
+}
+.homecta h2 {
+  margin: 0 0 8px;
+  font-size: 32px;
+  color: var(--navy);
+}
+.homecta p {
+  margin-bottom: 24px;
+}
+.homefoot {
+  text-align: center;
+  padding: 24px;
+  color: var(--muted-2);
+  font-size: 13px;
+  border-top: 1px solid var(--border);
+  background: #ffffffb3;
+}
+@media (max-width: 900px) {
+  .homegrid.four {
+    grid-template-columns: 1fr 1fr;
+  }
+  .homegrid.three {
+    grid-template-columns: 1fr;
+  }
+  .matchbox {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .homebar nav a {
+    display: none;
+  }
+}
+@media (max-width: 520px) {
+  .homegrid.four {
+    grid-template-columns: 1fr;
+  }
+  .homehero {
+    padding: 56px 20px 40px;
+  }
+  .homebar .secondary {
+    display: none;
+  }
 }

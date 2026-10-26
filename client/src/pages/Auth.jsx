@@ -20,8 +20,8 @@ function validate(f, login) {
   return e;
 }
 
-export default function Auth({ onLogin }) {
-  const [login, setLogin] = useState(true);
+export default function Auth({ onLogin, initialLogin = true, onBack }) {
+  const [login, setLogin] = useState(initialLogin);
   const [form, setForm] = useState({ name: "", email: "", password: "", role: "student", organization: "" });
   const [errors, setErrors] = useState({});
   const [error, setError] = useState("");
@@ -123,6 +123,11 @@ export default function Auth({ onLogin }) {
               {login ? "Create account" : "Sign in"}
             </a>
           </p>
+          {onBack && (
+            <p className="switch">
+              <a onClick={onBack}>← Back to home</a>
+            </p>
+          )}
         </div>
       </section>
     </main>
