@@ -9,6 +9,15 @@ const ref = (model, extra = {}) => ({
 });
 
 export const DEGREES = ["Certificate", "Diploma", "Bachelor", "Master", "PhD"];
+export const APPLICATION_STATUSES = [
+  "submitted",
+  "reviewing",
+  "shortlisted",
+  "interview",
+  "offered",
+  "rejected",
+  "withdrawn",
+];
 
 const userSchema = new Schema(
   {
@@ -61,6 +70,47 @@ const internshipSchema = new Schema(
 );
 internshipSchema.index({ title: "text", description: "text", requiredSkills: "text" });
 
+const matchSchema = new Schema(
+  {
+    student: ref("Student"),
+    internship: ref("Internship"),
+    score: { type: Number, required: true, min: 0, max: 100 },
+    breakdown: {
+      skills: Number,
+      field: Number,
+      degree: Number,
+      gpa: Number,
+      location: Number,
+    },
+    matchedSkills: [String],
+    missingSkills: [String],
+    status: { type: String, enum: ["pending", "approved", "rejected"], default: "pending" },
+    adminNote: { type: String, maxlength: 300 },
+  },
+  { timestamps: true },
+);
+matchSchema.index({ student: 1, internship: 1 }, { unique: true });
+
+const applicationSchema = new Schema(
+  {
+    student: ref("Student"),
+    internship: ref("Internship"),
+    coverNote: { type: String, maxlength: 1000 },
+    status: { type: String, enum: APPLICATION_STATUSES, default: "submitted" },
+    timeline: [
+      {
+        status: String,
+        note: String,
+        changedAt: { type: Date, default: Date.now },
+      },
+    ],
+  },
+  { timestamps: true },
+);
+applicationSchema.index({ student: 1, internship: 1 }, { unique: true });
+
 export const User = mongoose.model("User", userSchema);
 export const Student = mongoose.model("Student", studentSchema);
 export const Internship = mongoose.model("Internship", internshipSchema);
+export const Match = mongoose.model("Match", matchSchema);
+export const Application = mongoose.model("Application", applicationSchema);

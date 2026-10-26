@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { Internship } from "../models.js";
+import { Internship, Match, Application } from "../models.js";
 import { auth, allow, validId, wrap } from "../middleware.js";
 import { validateInternship, cleanSkills, escapeRegex, sendInvalid } from "../validators.js";
 
@@ -108,7 +108,7 @@ router.put(
   }),
 );
 
-// DELETE
+// DELETE (also removes dependent matches and applications)
 router.delete(
   "/:id",
   allow("company"),
@@ -116,6 +116,10 @@ router.delete(
   wrap(async (req, res) => {
     const item = await Internship.findOneAndDelete({ _id: req.params.id, company: req.user._id });
     if (!item) return res.status(404).json({ message: "Listing not found" });
+    await Promise.all([
+      Match.deleteMany({ internship: item._id }),
+      Application.deleteMany({ internship: item._id }),
+    ]);
     res.json({ message: "Listing deleted" });
   }),
 );
