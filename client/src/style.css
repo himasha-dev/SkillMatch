@@ -415,6 +415,38 @@ header {
   width: 34px;
 }
 
+/* ---------- Application tracker ---------- */
+.tracker {
+  display: grid;
+  gap: 12px;
+}
+.application {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 28px;
+}
+.stagebar {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 5px;
+}
+.stagebar i {
+  height: 7px;
+  border-radius: 9px;
+  background: #dfe8f6;
+}
+.stagebar i.done {
+  background: var(--primary);
+}
+.status-rejected,
+.status-withdrawn {
+  color: #a32e2e;
+}
+.status-offered {
+  color: var(--success);
+}
+
 .loading {
   height: 100vh;
   display: grid;
@@ -439,6 +471,10 @@ button.danger {
 }
 .row.end {
   justify-content: flex-end;
+}
+.stack {
+  display: grid;
+  gap: 16px;
 }
 .muted {
   color: var(--muted);
@@ -532,6 +568,13 @@ label.invalid textarea {
   align-items: center;
   gap: 16px;
   margin-top: 22px;
+}
+.appactions {
+  margin-top: 12px;
+}
+.appactions button {
+  padding: 8px 12px;
+  font-size: 13px;
 }
 .overlay {
   position: fixed;

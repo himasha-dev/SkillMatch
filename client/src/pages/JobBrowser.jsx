@@ -4,7 +4,7 @@ import { api, qs } from "../api.js";
 import { DEGREES, Empty, Tags } from "../components/ui.jsx";
 
 // Lists job records with search, filter, sort and pagination (READ).
-export default function JobBrowser({ mode, reloadKey, onView, onEdit, onDelete, onTotal }) {
+export default function JobBrowser({ mode, reloadKey, appliedIds = [], onView, onEdit, onDelete, onApply, onTotal }) {
   const [filters, setFilters] = useState({ search: "", location: "", degree: "", status: "", sort: "newest" });
   const [page, setPage] = useState(1);
   const [data, setData] = useState({ items: [], total: 0, pages: 1 });
@@ -86,6 +86,7 @@ export default function JobBrowser({ mode, reloadKey, onView, onEdit, onDelete, 
           <Empty text={filtered ? "No jobs match your search or filters." : mode === "company" ? "You have not posted any jobs yet." : "No open jobs right now."} />
         )}
         {data.items.map((j) => {
+          const applied = appliedIds.includes(j._id);
           return (
             <div className="job card" key={j._id}>
               <div className="jobtop">
@@ -110,6 +111,11 @@ export default function JobBrowser({ mode, reloadKey, onView, onEdit, onDelete, 
                 <button className="secondary" onClick={() => onView(j)}>
                   <Eye /> Details
                 </button>
+                {mode === "student" && (
+                  <button disabled={applied} onClick={() => onApply(j)}>
+                    {applied ? "Applied" : "Apply now"}
+                  </button>
+                )}
                 {mode === "company" && (
                   <>
                     <button className="secondary" onClick={() => onEdit(j)} aria-label={`Edit ${j.title}`}>
