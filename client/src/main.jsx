@@ -6,6 +6,7 @@ import { ToastProvider } from "./components/ui.jsx";
 import Auth from "./pages/Auth.jsx";
 import Student from "./pages/Student.jsx";
 import Company from "./pages/Company.jsx";
+import Admin from "./pages/Admin.jsx";
 import "./style.css";
 
 const RoleIcon = ({ role }) =>
@@ -57,7 +58,7 @@ function App() {
   };
   return (
     <Shell user={user} onLogout={logout}>
-      {user.role === "company" ? <Company /> : <p className="wrap">This dashboard is coming soon.</p>}
+      {user.role === "student" ? <Student /> : user.role === "company" ? <Company /> : <Admin />}
     </Shell>
   );
 }
