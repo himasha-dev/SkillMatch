@@ -41,6 +41,45 @@ body {
   min-height: 100vh;
 }
 
+/* ---------- Live animated background (every page) ---------- */
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  inset: -25%;
+  z-index: -1;
+  pointer-events: none;
+}
+body::before {
+  background:
+    radial-gradient(circle at 15% 20%, #3b82f64d 0, transparent 38%),
+    radial-gradient(circle at 85% 25%, #38bdf84d 0, transparent 40%),
+    radial-gradient(circle at 55% 85%, #6366f140 0, transparent 42%);
+  animation: bgdrift 22s ease-in-out infinite alternate;
+}
+body::after {
+  background:
+    radial-gradient(circle at 75% 70%, #60a5fa40 0, transparent 35%),
+    radial-gradient(circle at 25% 80%, #0ea5e933 0, transparent 38%),
+    radial-gradient(circle at 45% 10%, #818cf833 0, transparent 34%);
+  animation: bgdrift 30s ease-in-out infinite alternate-reverse;
+}
+@keyframes bgdrift {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
+  }
+  50% {
+    transform: translate3d(4%, -3%, 0) scale(1.08) rotate(6deg);
+  }
+  100% {
+    transform: translate3d(-4%, 4%, 0) scale(1.15) rotate(-6deg);
+  }
+}
+/* Old per-page background div (if you added it earlier) is no longer needed */
+.livebg {
+  display: none;
+}
+
 /* ---------- Base elements ---------- */
 button,
 input,
@@ -62,6 +101,11 @@ button {
   gap: 8px;
   transition: background 0.2s, transform 0.2s, box-shadow 0.2s, border-color 0.2s;
 }
+button:hover:not(:disabled) {
+  background: var(--primary-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px #1d4ed84d;
+}
 button:active:not(:disabled) {
   transform: translateY(0);
   box-shadow: none;
@@ -80,6 +124,12 @@ textarea {
   color: var(--text);
   outline: none;
   transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
+input:hover,
+select:hover,
+textarea:hover {
+  border-color: var(--border-strong);
+  background: #fbfdff;
 }
 input:focus,
 select:focus,
@@ -137,6 +187,9 @@ label {
   height: 38px;
   transition: transform 0.3s;
 }
+.brand:hover span {
+  transform: rotate(-12deg) scale(1.08);
+}
 .brand svg,
 .logo svg {
   width: 21px;
@@ -160,6 +213,15 @@ label {
   position: relative;
   overflow: hidden;
 }
+@keyframes herogradient {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
 .hero:after {
   content: "";
   position: absolute;
@@ -171,6 +233,15 @@ label {
   bottom: -170px;
   box-shadow: 0 0 0 80px #ffffff0a;
   animation: pulsering 8s ease-in-out infinite;
+}
+@keyframes pulsering {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.12);
+  }
 }
 .hero h1 {
   font-size: clamp(3rem, 6vw, 6rem);
@@ -194,6 +265,10 @@ label {
 }
 .steps span {
   transition: color 0.2s, transform 0.2s;
+}
+.steps span:hover {
+  color: #fff;
+  transform: translateY(-3px);
 }
 .authbox {
   display: grid;
@@ -223,6 +298,10 @@ label {
   cursor: pointer;
   transition: color 0.2s;
 }
+.switch a:hover {
+  color: var(--navy);
+  text-decoration: underline;
+}
 .demo,
 .error {
   font-size: 12px;
@@ -244,6 +323,17 @@ label {
   padding: 24px;
   box-shadow: var(--shadow);
   transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s, background 0.25s;
+}
+/* Hover lift on content cards (not on forms, tables, modals) */
+.job:hover,
+.match:hover,
+.application:hover,
+.stat:hover,
+.empty:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-hover);
+  border-color: var(--accent);
+  background: #fff;
 }
 
 /* ---------- Header ---------- */
@@ -281,12 +371,24 @@ header {
   height: 38px;
   transition: background 0.2s, transform 0.2s;
 }
+.identity > svg:hover {
+  background: #ffffff38;
+  transform: scale(1.08);
+}
 .iconbtn {
   padding: 9px;
   background: transparent;
 }
+.iconbtn:hover:not(:disabled) {
+  background: #ffffff24;
+  box-shadow: none;
+  transform: none;
+}
 .iconbtn.dark {
   color: var(--text);
+}
+.iconbtn.dark:hover:not(:disabled) {
+  background: #e6efff;
 }
 
 /* ---------- Page layout ---------- */
@@ -322,6 +424,11 @@ header {
   background: white;
   color: var(--primary);
   border: 1px solid var(--border-strong);
+}
+.secondary:hover:not(:disabled) {
+  background: #eef4ff;
+  border-color: var(--primary);
+  box-shadow: 0 8px 18px #1d4ed826;
 }
 .grid {
   display: grid;
@@ -390,6 +497,11 @@ header {
   padding: 5px 8px;
   border-radius: 6px;
   transition: background 0.2s, color 0.2s, transform 0.2s;
+}
+.tags span:hover {
+  background: var(--primary);
+  color: #fff;
+  transform: translateY(-1px);
 }
 
 /* ---------- Forms ---------- */
@@ -467,6 +579,10 @@ header {
   border-top: 1px solid #e6edf8;
   transition: background 0.2s, padding-left 0.2s;
 }
+.tr:not(.th):hover {
+  background: var(--row-hover);
+  padding-left: 26px;
+}
 .tr.th {
   border: 0;
   background: #f3f7fe;
@@ -498,6 +614,10 @@ header {
 .reject {
   background: #fbe9e9;
   color: #a32e2e;
+}
+.reject:hover:not(:disabled) {
+  background: #f6d2d2;
+  box-shadow: none;
 }
 
 /* ---------- Application tracker ---------- */
@@ -548,6 +668,10 @@ button:disabled {
 button.danger {
   background: var(--danger);
 }
+button.danger:hover:not(:disabled) {
+  background: var(--danger-dark);
+  box-shadow: 0 8px 18px #b42a2a40;
+}
 .row {
   display: flex;
   gap: 10px;
@@ -589,6 +713,10 @@ label.invalid textarea {
   font-size: 12px;
   background: #dbe8ff;
   color: var(--primary-dark);
+}
+.chip:hover:not(:disabled) {
+  background: #c5d9fb;
+  box-shadow: none;
 }
 .demo .row {
   margin-top: 8px;
@@ -716,6 +844,10 @@ label.invalid textarea {
   padding: 10px 12px;
   transition: background 0.2s, transform 0.2s;
 }
+.facts div:hover {
+  background: #e1ecff;
+  transform: translateY(-2px);
+}
 .facts dt {
   font-size: 11px;
   font-weight: 800;
@@ -734,6 +866,12 @@ label.invalid textarea {
   font-size: 14px;
   border-radius: 0;
   box-shadow: none;
+}
+.tags.removable button:hover:not(:disabled) {
+  background: none;
+  box-shadow: none;
+  transform: none;
+  color: var(--danger);
 }
 .tags.removable span {
   display: inline-flex;
@@ -790,6 +928,9 @@ html {
   text-decoration: none;
   transition: color 0.2s;
 }
+.homebar nav a:hover {
+  color: var(--primary);
+}
 .homebar nav button {
   padding: 9px 16px;
 }
@@ -837,6 +978,14 @@ html {
 .homegrid.three {
   grid-template-columns: repeat(3, 1fr);
 }
+.step:hover,
+.role:hover,
+.matchbox:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-hover);
+  border-color: var(--accent);
+  background: #fff;
+}
 .stepicon {
   display: grid;
   place-items: center;
@@ -847,6 +996,11 @@ html {
   color: var(--primary);
   margin-bottom: 12px;
   transition: background 0.2s, color 0.2s;
+}
+.step:hover .stepicon,
+.role:hover .stepicon {
+  background: var(--primary);
+  color: #fff;
 }
 .stepicon svg {
   width: 24px;
