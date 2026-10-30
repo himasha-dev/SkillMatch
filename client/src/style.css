@@ -896,6 +896,95 @@ label.invalid textarea {
   background: var(--danger);
 }
 
+/* ---------- Responsive ---------- */
+@media (max-width: 800px) {
+  .auth {
+    grid-template-columns: 1fr;
+  }
+  .hero {
+    display: none;
+  }
+  .authbox {
+    min-height: 100vh;
+  }
+  .welcome {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .stats,
+  .stats.five,
+  .cards {
+    grid-template-columns: 1fr 1fr;
+  }
+  .tr.th {
+    display: none;
+  }
+  .tr,
+  .tr.apptr {
+    grid-template-columns: 1fr 1fr;
+  }
+  .identity div {
+    display: none;
+  }
+  header {
+    padding: 0 16px;
+  }
+  .wrap {
+    padding: 36px 16px 60px;
+  }
+  .application {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  .steps {
+    flex-direction: column;
+    gap: 8px;
+  }
+}
+@media (max-width: 520px) {
+  .stats,
+  .stats.five,
+  .cards,
+  .formgrid {
+    grid-template-columns: 1fr;
+  }
+  .wide {
+    grid-column: auto;
+  }
+  .wrap {
+    padding: 38px 16px;
+  }
+  .welcome h1 {
+    font-size: 34px;
+  }
+  .tr,
+  .tr.apptr {
+    grid-template-columns: 1fr;
+  }
+  .authbox .card {
+    padding: 28px;
+  }
+  .welcome .generate {
+    width: 100%;
+  }
+  .toolbar > * {
+    flex: 1 1 100% !important;
+  }
+  .jobactions button {
+    flex: 1 1 100%;
+  }
+}
+
+/* Respect users who turn animations off */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
 /* ---------- Home (landing) page ---------- */
 html {
   scroll-behavior: smooth;

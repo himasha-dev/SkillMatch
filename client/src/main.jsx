@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { Target, LogOut, GraduationCap, Building2, ShieldCheck } from "lucide-react";
 import { api } from "./api.js";
-import { ToastProvider } from "./components/ui.jsx";
+import { ToastProvider, Confirm } from "./components/ui.jsx";
 import Home from "./pages/Home.jsx";
 import Auth from "./pages/Auth.jsx";
 import Student from "./pages/Student.jsx";
@@ -14,6 +14,7 @@ const RoleIcon = ({ role }) =>
   role === "student" ? <GraduationCap /> : role === "company" ? <Building2 /> : <ShieldCheck />;
 
 function Shell({ user, onLogout, children }) {
+  const [confirming, setConfirming] = useState(false);
   return (
     <>
       <header>
@@ -29,11 +30,20 @@ function Shell({ user, onLogout, children }) {
             <small>{user.role === "student" ? "candidate" : user.role}</small>
           </div>
           <RoleIcon role={user.role} />
-          <button className="iconbtn" onClick={onLogout} aria-label="Log out">
+          <button className="iconbtn" onClick={() => setConfirming(true)} aria-label="Log out">
             <LogOut />
           </button>
         </div>
       </header>
+      {confirming && (
+        <Confirm
+          title="Log out?"
+          text="Do you want to log out of SkillMatch?"
+          confirmLabel="Log out"
+          onConfirm={onLogout}
+          onCancel={() => setConfirming(false)}
+        />
+      )}
       {children}
     </>
   );
