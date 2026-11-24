@@ -33,7 +33,9 @@ jobs:
           cache-dependency-path: server/package-lock.json
       - run: npm ci
       - name: Run unit + API tests with coverage
-        run: npm run test:coverage | tee test-output.txt
+        run: |
+          set -o pipefail
+          npm run test:coverage | tee test-output.txt
       - name: Publish coverage table to the run summary
         if: always()
         run: |

@@ -11,7 +11,7 @@ import { Builder, By, until, Key } from "selenium-webdriver";
 import chrome from "selenium-webdriver/chrome.js";
 import { L } from "./locators.js";
 
-const BASE = process.env.BASE_URL || "http://localhost:5173";
+const BASE = process.env.BASE_URL || "http://localhost:4173";
 const PASSWORD = "Passw0rd1"; // matches server/scripts/seed.js
 const COMPANY = "hr@acme.test";
 const STUDENT = "student@uni.test";
