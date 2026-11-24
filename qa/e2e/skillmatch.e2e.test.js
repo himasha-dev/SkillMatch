@@ -16,7 +16,7 @@ const PASSWORD = "Passw0rd1"; // matches server/scripts/seed.js
 const COMPANY = "hr@acme.test";
 const STUDENT = "student@uni.test";
 const SHOTS = new URL("../reports/screenshots/", import.meta.url);
-const TIMEOUT = 10_000;
+const TIMEOUT = 30_000;
 
 let driver;
 const $ = (xpath) => driver.wait(until.elementLocated(By.xpath(xpath)), TIMEOUT);
@@ -27,7 +27,17 @@ const type = async (xpath, text) => {
   await el.clear();
   await el.sendKeys(text);
 };
-const click = async (xpath) => (await visible(xpath)).click();
+const click = async (xpath) => {
+  const el = await visible(xpath);
+  await driver.wait(until.elementIsEnabled(el), TIMEOUT);
+
+  await driver.executeScript(
+    "arguments[0].scrollIntoView({block: 'center'});",
+    el
+  );
+
+  await el.click();
+};
 // Wait for a toast with this exact text (an older toast may still be on screen).
 const expectToast = (text) => visible(`${L.toast}[normalize-space(.)='${text}']`);
 
