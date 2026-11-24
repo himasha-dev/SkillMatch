@@ -114,7 +114,9 @@ export default function Auth({ onLogin }) {
           <p className="switch">
             {login ? "New to SkillMatch?" : "Already registered?"}{" "}
             <a
-              onClick={() => {
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
                 setLogin(!login);
                 setErrors({});
                 setError("");

@@ -1,4 +1,4 @@
-import React, { createContext, useCallback, useContext, useState } from "react";
+import React, { createContext, useCallback, useContext, useEffect, useState } from "react";
 import { Briefcase, X } from "lucide-react";
 
 export const DEGREES = ["Certificate", "Diploma", "Bachelor", "Master", "PhD"];
@@ -35,6 +35,12 @@ export const Field = ({ label, error, className = "", children }) => (
 );
 
 export function Modal({ title, onClose, children }) {
+  // Close on Escape, as expected of an accessible dialog.
+  useEffect(() => {
+    const onKey = (e) => e.key === "Escape" && onClose();
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [onClose]);
   return (
     <div className="overlay" onMouseDown={(e) => e.target === e.currentTarget && onClose()}>
       <div className="modal card" role="dialog" aria-modal="true" aria-label={title}>

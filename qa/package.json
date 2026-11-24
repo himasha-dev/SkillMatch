@@ -1,0 +1,17 @@
+{
+  "name": "skillmatch-qa",
+  "private": true,
+  "type": "module",
+  "description": "BDD (Cucumber) and UI automation (Selenium) suites for SkillMatch",
+  "scripts": {
+    "bdd": "cucumber-js",
+    "e2e": "node --test --test-concurrency=1 \"e2e/**/*.test.js\""
+  },
+  "devDependencies": {
+    "@cucumber/cucumber": "^11.2.0",
+    "selenium-webdriver": "^4.27.0"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
