@@ -43,7 +43,13 @@ const click = async (xpath) => {
   console.log("[DEBUG] Clicking:", xpath);
   console.log("[DEBUG] Element:", await el.getText());
 
+  const tag = await el.getTagName();
+
+if (tag === "button") {
+  await el.sendKeys(Key.ENTER);
+} else {
   await el.click();
+}
 
   console.log("[DEBUG] Click completed:", xpath);
   console.log("[DEBUG] Current URL:", await driver.getCurrentUrl());
