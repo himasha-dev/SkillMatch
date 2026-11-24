@@ -15,6 +15,13 @@ const SORTS = {
   gpa: { minimumGpa: 1 },
 };
 
+// parseInt with a fallback only when the value is missing/non-numeric, so that
+// "0" is clamped by the caller instead of silently becoming the default.
+const intOr = (v, fallback) => {
+  const n = Number.parseInt(v, 10);
+  return Number.isNaN(n) ? fallback : n;
+};
+
 const pick = (b) => {
   const out = {};
   for (const k of [
@@ -38,8 +45,8 @@ router.get(
   "/",
   wrap(async (req, res) => {
     const { search, location, degree, status, sort = "newest" } = req.query;
-    const page = Math.max(1, parseInt(req.query.page) || 1);
-    const limit = Math.min(50, Math.max(1, parseInt(req.query.limit) || 12));
+    const page = Math.max(1, intOr(req.query.page, 1));
+    const limit = Math.min(50, Math.max(1, intOr(req.query.limit, 12)));
     const q = {};
     if (req.user.role === "company") q.company = req.user._id;
     if (req.user.role === "student") q.active = true;

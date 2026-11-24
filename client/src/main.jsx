@@ -37,6 +37,13 @@ function Shell({ user, onLogout, children }) {
   );
 }
 
+// One dashboard per role; admins have no UI in this release.
+function Dashboard({ role }) {
+  if (role === "company") return <Company />;
+  if (role === "student") return <Student />;
+  return <p className="wrap">The admin dashboard is not part of this release.</p>;
+}
+
 function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(!!localStorage.getItem("token"));
@@ -57,7 +64,7 @@ function App() {
   };
   return (
     <Shell user={user} onLogout={logout}>
-      {user.role === "company" ? <Company /> : <p className="wrap">This dashboard is coming soon.</p>}
+      <Dashboard role={user.role} />
     </Shell>
   );
 }

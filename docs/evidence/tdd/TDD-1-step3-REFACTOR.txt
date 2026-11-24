@@ -1,0 +1,693 @@
+TAP version 13
+# Subtest: auth middleware
+    # Subtest: WB-AUTH-01 no Authorization header -> 401
+    ok 1 - WB-AUTH-01 no Authorization header -> 401
+      ---
+      duration_ms: 0.855537
+      type: 'test'
+      ...
+    # Subtest: WB-AUTH-02 malformed token -> 401 Invalid or expired token
+    ok 2 - WB-AUTH-02 malformed token -> 401 Invalid or expired token
+      ---
+      duration_ms: 0.481035
+      type: 'test'
+      ...
+    # Subtest: WB-AUTH-03 token signed with a different secret -> 401
+    ok 3 - WB-AUTH-03 token signed with a different secret -> 401
+      ---
+      duration_ms: 2.610597
+      type: 'test'
+      ...
+    # Subtest: WB-AUTH-04 expired token -> 401
+    ok 4 - WB-AUTH-04 expired token -> 401
+      ---
+      duration_ms: 0.707829
+      type: 'test'
+      ...
+    # Subtest: WB-AUTH-05 valid token but user deleted -> 401 User no longer exists
+    ok 5 - WB-AUTH-05 valid token but user deleted -> 401 User no longer exists
+      ---
+      duration_ms: 0.900997
+      type: 'test'
+      ...
+    # Subtest: WB-AUTH-06 valid token -> req.user set (password excluded) and next() called
+    ok 6 - WB-AUTH-06 valid token -> req.user set (password excluded) and next() called
+      ---
+      duration_ms: 1.071126
+      type: 'test'
+      ...
+    1..6
+ok 1 - auth middleware
+  ---
+  duration_ms: 7.333987
+  type: 'suite'
+  ...
+# Subtest: allow (role guard)
+    # Subtest: WB-ALW-01 permitted role calls next()
+    ok 1 - WB-ALW-01 permitted role calls next()
+      ---
+      duration_ms: 0.280727
+      type: 'test'
+      ...
+    # Subtest: WB-ALW-02 other role -> 403
+    ok 2 - WB-ALW-02 other role -> 403
+      ---
+      duration_ms: 0.171858
+      type: 'test'
+      ...
+    1..2
+ok 2 - allow (role guard)
+  ---
+  duration_ms: 0.56838
+  type: 'suite'
+  ...
+# Subtest: validId
+    # Subtest: WB-VID-01 valid ObjectId passes
+    ok 1 - WB-VID-01 valid ObjectId passes
+      ---
+      duration_ms: 0.41298
+      type: 'test'
+      ...
+    # Subtest: WB-VID-02 invalid id -> 400
+    ok 2 - WB-VID-02 invalid id -> 400
+      ---
+      duration_ms: 0.234252
+      type: 'test'
+      ...
+    1..2
+ok 3 - validId
+  ---
+  duration_ms: 0.729467
+  type: 'suite'
+  ...
+# Subtest: wrap + error handling
+    # Subtest: WB-WRP-01 forwards a rejected promise to next(err)
+    ok 1 - WB-WRP-01 forwards a rejected promise to next(err)
+      ---
+      duration_ms: 0.226035
+      type: 'test'
+      ...
+    # Subtest: WB-ERR-01 Mongoose ValidationError -> 400 with field map
+    ok 2 - WB-ERR-01 Mongoose ValidationError -> 400 with field map
+      ---
+      duration_ms: 0.205973
+      type: 'test'
+      ...
+    # Subtest: WB-ERR-02 CastError -> 400
+    ok 3 - WB-ERR-02 CastError -> 400
+      ---
+      duration_ms: 0.080089
+      type: 'test'
+      ...
+    # Subtest: WB-ERR-03 duplicate key (11000) -> 409
+    ok 4 - WB-ERR-03 duplicate key (11000) -> 409
+      ---
+      duration_ms: 0.064517
+      type: 'test'
+      ...
+    # Subtest: WB-ERR-04 unknown error -> 500 without leaking details
+    ok 5 - WB-ERR-04 unknown error -> 500 without leaking details
+      ---
+      duration_ms: 0.100807
+      type: 'test'
+      ...
+    # Subtest: WB-ERR-05 notFound -> 404 naming the route
+    ok 6 - WB-ERR-05 notFound -> 404 naming the route
+      ---
+      duration_ms: 0.174641
+      type: 'test'
+      ...
+    1..6
+ok 4 - wrap + error handling
+  ---
+  duration_ms: 0.952507
+  type: 'suite'
+  ...
+# Subtest: TDD-1 listing deadline must not be in the past (server side)
+    # Subtest: TDD-1a rejects yesterday's date
+    ok 1 - TDD-1a rejects yesterday's date
+      ---
+      duration_ms: 1.232207
+      type: 'test'
+      ...
+    # Subtest: TDD-1b rejects a date a year ago
+    ok 2 - TDD-1b rejects a date a year ago
+      ---
+      duration_ms: 0.188862
+      type: 'test'
+      ...
+    # Subtest: TDD-1c accepts today's date (boundary)
+    ok 3 - TDD-1c accepts today's date (boundary)
+      ---
+      duration_ms: 0.165695
+      type: 'test'
+      ...
+    # Subtest: TDD-1d accepts tomorrow
+    ok 4 - TDD-1d accepts tomorrow
+      ---
+      duration_ms: 0.104214
+      type: 'test'
+      ...
+    # Subtest: TDD-1e still reports an unparseable date as invalid, not as past
+    ok 5 - TDD-1e still reports an unparseable date as invalid, not as past
+      ---
+      duration_ms: 0.100297
+      type: 'test'
+      ...
+    # Subtest: TDD-1f no deadline (open-ended listing) is allowed
+    ok 6 - TDD-1f no deadline (open-ended listing) is allowed
+      ---
+      duration_ms: 0.155659
+      type: 'test'
+      ...
+    1..6
+ok 5 - TDD-1 listing deadline must not be in the past (server side)
+  ---
+  duration_ms: 2.998603
+  type: 'suite'
+  ...
+# Subtest: TDD-1 refactor: checkDeadline with a fixed clock
+    # Subtest: TDD-1g 2026-11-22T23:59:59Z is past
+    ok 1 - TDD-1g 2026-11-22T23:59:59Z is past
+      ---
+      duration_ms: 0.207612
+      type: 'test'
+      ...
+    # Subtest: TDD-1h 2026-11-23 (start of today) is allowed
+    ok 2 - TDD-1h 2026-11-23 (start of today) is allowed
+      ---
+      duration_ms: 0.200139
+      type: 'test'
+      ...
+    # Subtest: TDD-1i empty value is allowed
+    ok 3 - TDD-1i empty value is allowed
+      ---
+      duration_ms: 0.271808
+      type: 'test'
+      ...
+    1..3
+ok 6 - TDD-1 refactor: checkDeadline with a fixed clock
+  ---
+  duration_ms: 0.957405
+  type: 'suite'
+  ...
+# Subtest: Equivalence Partitioning - registration password
+    # Subtest: EP-PW-01 valid: >=8 chars with letters and digits
+    ok 1 - EP-PW-01 valid: >=8 chars with letters and digits
+      ---
+      duration_ms: 0.521447
+      type: 'test'
+      ...
+    # Subtest: EP-PW-02 invalid: shorter than 8
+    ok 2 - EP-PW-02 invalid: shorter than 8
+      ---
+      duration_ms: 0.13492
+      type: 'test'
+      ...
+    # Subtest: EP-PW-03 invalid: letters only
+    ok 3 - EP-PW-03 invalid: letters only
+      ---
+      duration_ms: 0.076962
+      type: 'test'
+      ...
+    # Subtest: EP-PW-04 invalid: digits only
+    ok 4 - EP-PW-04 invalid: digits only
+      ---
+      duration_ms: 0.048005
+      type: 'test'
+      ...
+    # Subtest: EP-PW-05 invalid: not a string
+    ok 5 - EP-PW-05 invalid: not a string
+      ---
+      duration_ms: 0.046618
+      type: 'test'
+      ...
+    # Subtest: EP-PW-06 invalid: missing
+    ok 6 - EP-PW-06 invalid: missing
+      ---
+      duration_ms: 0.046446
+      type: 'test'
+      ...
+    1..6
+ok 7 - Equivalence Partitioning - registration password
+  ---
+  duration_ms: 1.534059
+  type: 'suite'
+  ...
+# Subtest: Equivalence Partitioning - account role / organization
+    # Subtest: EP-RL-01 valid: student without organization
+    ok 1 - EP-RL-01 valid: student without organization
+      ---
+      duration_ms: 0.569353
+      type: 'test'
+      ...
+    # Subtest: EP-RL-02 valid: company with organization
+    ok 2 - EP-RL-02 valid: company with organization
+      ---
+      duration_ms: 0.153635
+      type: 'test'
+      ...
+    # Subtest: EP-RL-03 invalid: company with blank organization
+    ok 3 - EP-RL-03 invalid: company with blank organization
+      ---
+      duration_ms: 0.144567
+      type: 'test'
+      ...
+    # Subtest: EP-RL-04 invalid: self-registering as admin is rejected
+    ok 4 - EP-RL-04 invalid: self-registering as admin is rejected
+      ---
+      duration_ms: 0.203535
+      type: 'test'
+      ...
+    # Subtest: EP-RL-05 invalid: missing role
+    ok 5 - EP-RL-05 invalid: missing role
+      ---
+      duration_ms: 0.063069
+      type: 'test'
+      ...
+    1..5
+ok 8 - Equivalence Partitioning - account role / organization
+  ---
+  duration_ms: 1.289392
+  type: 'suite'
+  ...
+# Subtest: Equivalence Partitioning - email
+    # Subtest: EP-EM-01 valid address (surrounding spaces trimmed)
+    ok 1 - EP-EM-01 valid address (surrounding spaces trimmed)
+      ---
+      duration_ms: 0.075725
+      type: 'test'
+      ...
+    # Subtest: EP-EM-02 invalid: "no-at-sign.com"
+    ok 2 - EP-EM-02 invalid: "no-at-sign.com"
+      ---
+      duration_ms: 0.037273
+      type: 'test'
+      ...
+    # Subtest: EP-EM-03 invalid: "a@b"
+    ok 3 - EP-EM-03 invalid: "a@b"
+      ---
+      duration_ms: 0.053949
+      type: 'test'
+      ...
+    # Subtest: EP-EM-04 invalid: "a b@c.com"
+    ok 4 - EP-EM-04 invalid: "a b@c.com"
+      ---
+      duration_ms: 0.031472
+      type: 'test'
+      ...
+    # Subtest: EP-EM-05 invalid: ""
+    ok 5 - EP-EM-05 invalid: ""
+      ---
+      duration_ms: 0.028409
+      type: 'test'
+      ...
+    # Subtest: EP-EM-06 invalid: non-string (object) is rejected, not coerced
+    ok 6 - EP-EM-06 invalid: non-string (object) is rejected, not coerced
+      ---
+      duration_ms: 0.037847
+      type: 'test'
+      ...
+    1..6
+ok 9 - Equivalence Partitioning - email
+  ---
+  duration_ms: 0.345924
+  type: 'suite'
+  ...
+# Subtest: Equivalence Partitioning - profile GPA
+    # Subtest: EP-GPA-01 valid: number inside 0..4
+    ok 1 - EP-GPA-01 valid: number inside 0..4
+      ---
+      duration_ms: 0.140591
+      type: 'test'
+      ...
+    # Subtest: EP-GPA-02 valid: numeric string inside 0..4
+    ok 2 - EP-GPA-02 valid: numeric string inside 0..4
+      ---
+      duration_ms: 0.040126
+      type: 'test'
+      ...
+    # Subtest: EP-GPA-03 invalid: below range
+    ok 3 - EP-GPA-03 invalid: below range
+      ---
+      duration_ms: 0.036553
+      type: 'test'
+      ...
+    # Subtest: EP-GPA-04 invalid: above range
+    ok 4 - EP-GPA-04 invalid: above range
+      ---
+      duration_ms: 0.026725
+      type: 'test'
+      ...
+    # Subtest: EP-GPA-05 invalid: non-numeric text
+    ok 5 - EP-GPA-05 invalid: non-numeric text
+      ---
+      duration_ms: 0.029241
+      type: 'test'
+      ...
+    # Subtest: EP-GPA-06 invalid: empty string
+    ok 6 - EP-GPA-06 invalid: empty string
+      ---
+      duration_ms: 0.02872
+      type: 'test'
+      ...
+    # Subtest: EP-GPA-07 invalid: null
+    ok 7 - EP-GPA-07 invalid: null
+      ---
+      duration_ms: 0.028714
+      type: 'test'
+      ...
+    1..7
+ok 10 - Equivalence Partitioning - profile GPA
+  ---
+  duration_ms: 0.415373
+  type: 'suite'
+  ...
+# Subtest: Boundary Value Analysis - GPA (0..4)
+    # Subtest: BVA-GPA profile gpa=-0.01 -> rejected
+    ok 1 - BVA-GPA profile gpa=-0.01 -> rejected
+      ---
+      duration_ms: 0.101645
+      type: 'test'
+      ...
+    # Subtest: BVA-GPA internship minimumGpa=-0.01 -> rejected
+    ok 2 - BVA-GPA internship minimumGpa=-0.01 -> rejected
+      ---
+      duration_ms: 0.135971
+      type: 'test'
+      ...
+    # Subtest: BVA-GPA profile gpa=0 -> accepted
+    ok 3 - BVA-GPA profile gpa=0 -> accepted
+      ---
+      duration_ms: 0.033354
+      type: 'test'
+      ...
+    # Subtest: BVA-GPA internship minimumGpa=0 -> accepted
+    ok 4 - BVA-GPA internship minimumGpa=0 -> accepted
+      ---
+      duration_ms: 0.030133
+      type: 'test'
+      ...
+    # Subtest: BVA-GPA profile gpa=0.01 -> accepted
+    ok 5 - BVA-GPA profile gpa=0.01 -> accepted
+      ---
+      duration_ms: 0.043969
+      type: 'test'
+      ...
+    # Subtest: BVA-GPA internship minimumGpa=0.01 -> accepted
+    ok 6 - BVA-GPA internship minimumGpa=0.01 -> accepted
+      ---
+      duration_ms: 0.035115
+      type: 'test'
+      ...
+    # Subtest: BVA-GPA profile gpa=3.99 -> accepted
+    ok 7 - BVA-GPA profile gpa=3.99 -> accepted
+      ---
+      duration_ms: 0.045451
+      type: 'test'
+      ...
+    # Subtest: BVA-GPA internship minimumGpa=3.99 -> accepted
+    ok 8 - BVA-GPA internship minimumGpa=3.99 -> accepted
+      ---
+      duration_ms: 0.028011
+      type: 'test'
+      ...
+    # Subtest: BVA-GPA profile gpa=4 -> accepted
+    ok 9 - BVA-GPA profile gpa=4 -> accepted
+      ---
+      duration_ms: 0.026132
+      type: 'test'
+      ...
+    # Subtest: BVA-GPA internship minimumGpa=4 -> accepted
+    ok 10 - BVA-GPA internship minimumGpa=4 -> accepted
+      ---
+      duration_ms: 0.026925
+      type: 'test'
+      ...
+    # Subtest: BVA-GPA profile gpa=4.01 -> rejected
+    ok 11 - BVA-GPA profile gpa=4.01 -> rejected
+      ---
+      duration_ms: 0.06577
+      type: 'test'
+      ...
+    # Subtest: BVA-GPA internship minimumGpa=4.01 -> rejected
+    ok 12 - BVA-GPA internship minimumGpa=4.01 -> rejected
+      ---
+      duration_ms: 0.03118
+      type: 'test'
+      ...
+    1..12
+ok 11 - Boundary Value Analysis - GPA (0..4)
+  ---
+  duration_ms: 0.809072
+  type: 'suite'
+  ...
+# Subtest: Boundary Value Analysis - password length (min 8)
+    # Subtest: BVA-PW length 7 -> rejected
+    ok 1 - BVA-PW length 7 -> rejected
+      ---
+      duration_ms: 0.128083
+      type: 'test'
+      ...
+    # Subtest: BVA-PW length 8 -> accepted
+    ok 2 - BVA-PW length 8 -> accepted
+      ---
+      duration_ms: 0.050076
+      type: 'test'
+      ...
+    # Subtest: BVA-PW length 9 -> accepted
+    ok 3 - BVA-PW length 9 -> accepted
+      ---
+      duration_ms: 0.043464
+      type: 'test'
+      ...
+    1..3
+ok 12 - Boundary Value Analysis - password length (min 8)
+  ---
+  duration_ms: 0.295394
+  type: 'suite'
+  ...
+# Subtest: Boundary Value Analysis - internship text and openings
+    # Subtest: BVA-TTL title length 2 -> rejected
+    ok 1 - BVA-TTL title length 2 -> rejected
+      ---
+      duration_ms: 0.182121
+      type: 'test'
+      ...
+    # Subtest: BVA-TTL title length 3 -> accepted
+    ok 2 - BVA-TTL title length 3 -> accepted
+      ---
+      duration_ms: 0.099379
+      type: 'test'
+      ...
+    # Subtest: BVA-TTL title length 4 -> accepted
+    ok 3 - BVA-TTL title length 4 -> accepted
+      ---
+      duration_ms: 0.035268
+      type: 'test'
+      ...
+    # Subtest: BVA-DSC description length 9 -> rejected
+    ok 4 - BVA-DSC description length 9 -> rejected
+      ---
+      duration_ms: 0.070751
+      type: 'test'
+      ...
+    # Subtest: BVA-DSC description length 10 -> accepted
+    ok 5 - BVA-DSC description length 10 -> accepted
+      ---
+      duration_ms: 0.040624
+      type: 'test'
+      ...
+    # Subtest: BVA-DSC description length 11 -> accepted
+    ok 6 - BVA-DSC description length 11 -> accepted
+      ---
+      duration_ms: 0.029017
+      type: 'test'
+      ...
+    # Subtest: BVA-OPN openings=0 -> rejected
+    ok 7 - BVA-OPN openings=0 -> rejected
+      ---
+      duration_ms: 0.046752
+      type: 'test'
+      ...
+    # Subtest: BVA-OPN openings=1 -> accepted
+    ok 8 - BVA-OPN openings=1 -> accepted
+      ---
+      duration_ms: 0.02865
+      type: 'test'
+      ...
+    # Subtest: BVA-OPN openings=2 -> accepted
+    ok 9 - BVA-OPN openings=2 -> accepted
+      ---
+      duration_ms: 0.026509
+      type: 'test'
+      ...
+    # Subtest: BVA-OPN openings=1.5 -> rejected
+    ok 10 - BVA-OPN openings=1.5 -> rejected
+      ---
+      duration_ms: 0.035279
+      type: 'test'
+      ...
+    # Subtest: BVA-NAME name length 1 -> rejected
+    ok 11 - BVA-NAME name length 1 -> rejected
+      ---
+      duration_ms: 0.039301
+      type: 'test'
+      ...
+    # Subtest: BVA-NAME name length 2 -> accepted
+    ok 12 - BVA-NAME name length 2 -> accepted
+      ---
+      duration_ms: 0.02585
+      type: 'test'
+      ...
+    # Subtest: BVA-NAME name length 3 -> accepted
+    ok 13 - BVA-NAME name length 3 -> accepted
+      ---
+      duration_ms: 0.02711
+      type: 'test'
+      ...
+    1..13
+ok 13 - Boundary Value Analysis - internship text and openings
+  ---
+  duration_ms: 0.841172
+  type: 'suite'
+  ...
+# Subtest: Boundary Value Analysis - experience months
+    # Subtest: BVA-EXP -1 rejected
+    ok 1 - BVA-EXP -1 rejected
+      ---
+      duration_ms: 0.105119
+      type: 'test'
+      ...
+    # Subtest: BVA-EXP 0 accepted
+    ok 2 - BVA-EXP 0 accepted
+      ---
+      duration_ms: 0.036918
+      type: 'test'
+      ...
+    # Subtest: BVA-EXP 600 accepted (schema maximum)
+    ok 3 - BVA-EXP 600 accepted (schema maximum)
+      ---
+      duration_ms: 0.032699
+      type: 'test'
+      ...
+    1..3
+ok 14 - Boundary Value Analysis - experience months
+  ---
+  duration_ms: 0.221019
+  type: 'suite'
+  ...
+# Subtest: validateInternship - other rules
+    # Subtest: UT-INT-01 a complete valid listing has no errors
+    ok 1 - UT-INT-01 a complete valid listing has no errors
+      ---
+      duration_ms: 0.079861
+      type: 'test'
+      ...
+    # Subtest: UT-INT-02 requires at least one skill
+    ok 2 - UT-INT-02 requires at least one skill
+      ---
+      duration_ms: 0.076204
+      type: 'test'
+      ...
+    # Subtest: UT-INT-03 rejects skills that are not an array
+    ok 3 - UT-INT-03 rejects skills that are not an array
+      ---
+      duration_ms: 0.051292
+      type: 'test'
+      ...
+    # Subtest: UT-INT-04 rejects an unknown degree
+    ok 4 - UT-INT-04 rejects an unknown degree
+      ---
+      duration_ms: 0.049081
+      type: 'test'
+      ...
+    # Subtest: UT-INT-05 rejects an unparseable deadline
+    ok 5 - UT-INT-05 rejects an unparseable deadline
+      ---
+      duration_ms: 0.042763
+      type: 'test'
+      ...
+    # Subtest: UT-INT-06 partial update only checks the fields sent
+    ok 6 - UT-INT-06 partial update only checks the fields sent
+      ---
+      duration_ms: 0.048663
+      type: 'test'
+      ...
+    # Subtest: UT-INT-07 partial update still validates a field that is sent
+    ok 7 - UT-INT-07 partial update still validates a field that is sent
+      ---
+      duration_ms: 0.039027
+      type: 'test'
+      ...
+    1..7
+ok 15 - validateInternship - other rules
+  ---
+  duration_ms: 0.483034
+  type: 'suite'
+  ...
+# Subtest: validateProfile - other rules
+    # Subtest: UT-PRF-01 complete valid profile has no errors
+    ok 1 - UT-PRF-01 complete valid profile has no errors
+      ---
+      duration_ms: 0.065691
+      type: 'test'
+      ...
+    # Subtest: UT-PRF-02 rejects unknown degree
+    ok 2 - UT-PRF-02 rejects unknown degree
+      ---
+      duration_ms: 0.03525
+      type: 'test'
+      ...
+    # Subtest: UT-PRF-03 requires field of study (min 2 chars)
+    ok 3 - UT-PRF-03 requires field of study (min 2 chars)
+      ---
+      duration_ms: 0.098225
+      type: 'test'
+      ...
+    # Subtest: UT-PRF-04 requires at least one skill
+    ok 4 - UT-PRF-04 requires at least one skill
+      ---
+      duration_ms: 0.055481
+      type: 'test'
+      ...
+    1..4
+ok 16 - validateProfile - other rules
+  ---
+  duration_ms: 0.327753
+  type: 'suite'
+  ...
+# Subtest: helpers
+    # Subtest: UT-SKL-01 cleanSkills trims, drops blanks and removes duplicates
+    ok 1 - UT-SKL-01 cleanSkills trims, drops blanks and removes duplicates
+      ---
+      duration_ms: 0.213943
+      type: 'test'
+      ...
+    # Subtest: UT-SKL-02 cleanSkills tolerates non-arrays
+    ok 2 - UT-SKL-02 cleanSkills tolerates non-arrays
+      ---
+      duration_ms: 0.085092
+      type: 'test'
+      ...
+    # Subtest: UT-RGX-01 escapeRegex neutralises regex metacharacters
+    ok 3 - UT-RGX-01 escapeRegex neutralises regex metacharacters
+      ---
+      duration_ms: 0.128049
+      type: 'test'
+      ...
+    1..3
+ok 17 - helpers
+  ---
+  duration_ms: 0.527045
+  type: 'suite'
+  ...
+1..17
+# tests 94
+# suites 17
+# pass 94
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 640.331612

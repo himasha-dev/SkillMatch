@@ -109,12 +109,16 @@ export default function Auth({ onLogin }) {
                 autoComplete={login ? "current-password" : "new-password"}
               />
             </Field>
-            <button disabled={busy}>{busy ? "Please wait..." : "Continue"} <span>→</span></button>
+            <button type="submit" disabled={busy}>
+            {busy ? "Please wait..." : "Continue"} <span>→</span>
+            </button>
           </form>
           <p className="switch">
             {login ? "New to SkillMatch?" : "Already registered?"}{" "}
             <a
-              onClick={() => {
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
                 setLogin(!login);
                 setErrors({});
                 setError("");

@@ -1,0 +1,55 @@
+// Control Flow Graph - POST /api/applications handler (server/src/routes/applications.js)
+// Each compound condition is split into its atomic decisions (A||B, A&&B) so the graph
+// supports branch AND condition coverage. Decision nodes are diamonds.
+digraph CFG {
+  graph [rankdir=TB, fontname="Helvetica", fontsize=11, nodesep=0.35, ranksep=0.32, label="CFG: submitApplication (POST /api/applications)   V(G) = E - N + 2", labelloc=t];
+  node  [fontname="Helvetica", fontsize=10, shape=box, style="rounded,filled", fillcolor="#eef4ff", color="#3b5bdb"];
+  edge  [fontname="Helvetica", fontsize=9, color="#555555"];
+
+  n1  [label="1: student = Student.findOne(user)"];
+  d1  [label="D1\n!student ?", shape=diamond, fillcolor="#fff4e6", color="#e8590c"];
+  r1  [label="return 400\nComplete your profile", fillcolor="#ffe3e3", color="#c92a2a"];
+  d2  [label="D2\ncoverNote truthy ?", shape=diamond, fillcolor="#fff4e6", color="#e8590c"];
+  n2a [label="2a: raw = coverNote"];
+  n2b [label="2b: raw = \"\""];
+  n3  [label="3: note = String(raw).trim()"];
+  d3  [label="D3\nnote.length > 1000 ?", shape=diamond, fillcolor="#fff4e6", color="#e8590c"];
+  r3  [label="return 400\nCover note too long", fillcolor="#ffe3e3", color="#c92a2a"];
+  d4  [label="D4\ninternship not a string ?", shape=diamond, fillcolor="#fff4e6", color="#e8590c"];
+  d5  [label="D5\n!isValidObjectId ?", shape=diamond, fillcolor="#fff4e6", color="#e8590c"];
+  r4  [label="return 400\nChoose a valid job", fillcolor="#ffe3e3", color="#c92a2a"];
+  n4  [label="4: job = Internship.findOne(id, active)"];
+  d6  [label="D6\n!job ?", shape=diamond, fillcolor="#fff4e6", color="#e8590c"];
+  r6  [label="return 404\nJob is unavailable", fillcolor="#ffe3e3", color="#c92a2a"];
+  d7  [label="D7\njob.deadline set ?", shape=diamond, fillcolor="#fff4e6", color="#e8590c"];
+  d8  [label="D8\ndeadline < now ?", shape=diamond, fillcolor="#fff4e6", color="#e8590c"];
+  r8  [label="return 400\nDeadline has passed", fillcolor="#ffe3e3", color="#c92a2a"];
+  n5  [label="5: previous = Application.findOne(student, job)"];
+  d9  [label="D9\nprevious exists ?", shape=diamond, fillcolor="#fff4e6", color="#e8590c"];
+  d10 [label="D10\nprevious.status != withdrawn ?", shape=diamond, fillcolor="#fff4e6", color="#e8590c"];
+  r10 [label="return 409\nAlready applied", fillcolor="#ffe3e3", color="#c92a2a"];
+  d11 [label="D11\nprevious exists ?", shape=diamond, fillcolor="#fff4e6", color="#e8590c"];
+  n6  [label="6: reopen previous, push timeline, save()"];
+  r11 [label="return 201 (reopened)", fillcolor="#d3f9d8", color="#2b8a3e"];
+  n7  [label="7: Application.create(...)"];
+  r12 [label="return 201 (created)", fillcolor="#d3f9d8", color="#2b8a3e"];
+  x   [label="EXIT", shape=circle, fillcolor="#e9ecef", color="#495057", width=0.6];
+
+  n1 -> d1;
+  d1 -> r1 [label="T"];   d1 -> d2 [label="F"];
+  d2 -> n2a [label="T"];  d2 -> n2b [label="F"];
+  n2a -> n3; n2b -> n3; n3 -> d3;
+  d3 -> r3 [label="T"];   d3 -> d4 [label="F"];
+  d4 -> r4 [label="T"];   d4 -> d5 [label="F"];
+  d5 -> r4 [label="T"];   d5 -> n4 [label="F"];
+  n4 -> d6;
+  d6 -> r6 [label="T"];   d6 -> d7 [label="F"];
+  d7 -> d8 [label="T"];   d7 -> n5 [label="F"];
+  d8 -> r8 [label="T"];   d8 -> n5 [label="F"];
+  n5 -> d9;
+  d9 -> d10 [label="T"];  d9 -> d11 [label="F"];
+  d10 -> r10 [label="T"]; d10 -> d11 [label="F"];
+  d11 -> n6 [label="T"];  d11 -> n7 [label="F"];
+  n6 -> r11; n7 -> r12;
+  r1 -> x; r3 -> x; r4 -> x; r6 -> x; r8 -> x; r10 -> x; r11 -> x; r12 -> x;
+}

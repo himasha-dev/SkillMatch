@@ -1,0 +1,1828 @@
+TAP version 13
+# Subtest: Decision table DT-1: POST /api/applications
+    # Subtest: DT-APP-R1 no profile -> 400 'Complete your qualification profile first'
+    ok 1 - DT-APP-R1 no profile -> 400 'Complete your qualification profile first'
+      ---
+      duration_ms: 44.262088
+      type: 'test'
+      ...
+    # Subtest: DT-APP-R2 profile, note too long -> 400
+    ok 2 - DT-APP-R2 profile, note too long -> 400
+      ---
+      duration_ms: 9.986625
+      type: 'test'
+      ...
+    # Subtest: DT-APP-R3 profile, note ok, job missing or closed -> 404 'Job is unavailable'
+    ok 3 - DT-APP-R3 profile, note ok, job missing or closed -> 404 'Job is unavailable'
+      ---
+      duration_ms: 3.197994
+      type: 'test'
+      ...
+    # Subtest: DT-APP-R4 profile, note ok, job active, deadline passed -> 400
+    ok 4 - DT-APP-R4 profile, note ok, job active, deadline passed -> 400
+      ---
+      duration_ms: 2.616166
+      type: 'test'
+      ...
+    # Subtest: DT-APP-R5 all conditions true -> 201 with initial timeline entry
+    ok 5 - DT-APP-R5 all conditions true -> 201 with initial timeline entry
+      ---
+      duration_ms: 3.297075
+      type: 'test'
+      ...
+    # Subtest: DT-APP-R5b job with no deadline -> 201
+    ok 6 - DT-APP-R5b job with no deadline -> 201
+      ---
+      duration_ms: 2.794528
+      type: 'test'
+      ...
+    # Subtest: DT-APP-R6 already applied (unique index) -> 409
+    ok 7 - DT-APP-R6 already applied (unique index) -> 409
+      ---
+      duration_ms: 2.713204
+      type: 'test'
+      ...
+    # Subtest: DT-APP-R7 only students may apply -> 403
+    ok 8 - DT-APP-R7 only students may apply -> 403
+      ---
+      duration_ms: 2.337235
+      type: 'test'
+      ...
+    1..8
+ok 1 - Decision table DT-1: POST /api/applications
+  ---
+  duration_ms: 78.572758
+  type: 'suite'
+  ...
+# AssertionError [ERR_ASSERTION]: must reuse the record
+#     at Function.<anonymous> (file:///home/claude/work/SkillMatch/server/tests/api/applications.api.test.js:90:67)
+#     at Object.apply (node:internal/test_runner/mock/mock:765:20)
+#     at file:///home/claude/work/SkillMatch/server/src/routes/applications.js:28:35
+#     at process.processTicksAndRejections (node:internal/process/task_queues:103:5) {
+#   generatedMessage: false,
+#   code: 'ERR_ASSERTION',
+#   actual: undefined,
+#   expected: undefined,
+#   operator: 'fail',
+#   diff: 'simple'
+# }
+# Subtest: Re-applying to a job (client shows 'Apply now' again after a withdrawal)
+    # Subtest: API-RAP-01 re-applying after withdrawing reopens the same application -> 201
+    not ok 1 - API-RAP-01 re-applying after withdrawing reopens the same application -> 201
+      ---
+      duration_ms: 8.967013
+      type: 'test'
+      location: '/home/claude/work/SkillMatch/server/tests/api/applications.api.test.js:86:3'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly equal:
+        
+        500 !== 201
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 201
+      actual: 500
+      operator: 'strictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///home/claude/work/SkillMatch/server/tests/api/applications.api.test.js:92:12)
+        process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Promise.all (index 0)
+        async Suite.run (node:internal/test_runner/test:1442:7)
+        async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: API-RAP-02 applying twice while the first is still open -> 409 with a clear message
+    not ok 2 - API-RAP-02 applying twice while the first is still open -> 409 with a clear message
+      ---
+      duration_ms: 4.502083
+      type: 'test'
+      location: '/home/claude/work/SkillMatch/server/tests/api/applications.api.test.js:99:3'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly equal:
+        
+        201 !== 409
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 409
+      actual: 201
+      operator: 'strictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///home/claude/work/SkillMatch/server/tests/api/applications.api.test.js:103:12)
+        process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    1..2
+not ok 2 - Re-applying to a job (client shows 'Apply now' again after a withdrawal)
+  ---
+  duration_ms: 13.882297
+  type: 'suite'
+  location: '/home/claude/work/SkillMatch/server/tests/api/applications.api.test.js:85:1'
+  failureType: 'subtestsFailed'
+  error: '2 subtests failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# Subtest: Boundary Value Analysis - cover note length (max 1000)
+    # Subtest: BVA-NOTE length 999 -> 201
+    ok 1 - BVA-NOTE length 999 -> 201
+      ---
+      duration_ms: 3.971303
+      type: 'test'
+      ...
+    # Subtest: BVA-NOTE length 1000 -> 201
+    ok 2 - BVA-NOTE length 1000 -> 201
+      ---
+      duration_ms: 2.980391
+      type: 'test'
+      ...
+    # Subtest: BVA-NOTE length 1001 -> 400
+    ok 3 - BVA-NOTE length 1001 -> 400
+      ---
+      duration_ms: 2.446176
+      type: 'test'
+      ...
+    # Subtest: BVA-NOTE 1001 chars of which 1 is surrounding whitespace -> accepted (trimmed first)
+    ok 4 - BVA-NOTE 1001 chars of which 1 is surrounding whitespace -> accepted (trimmed first)
+      ---
+      duration_ms: 9.190494
+      type: 'test'
+      ...
+    1..4
+ok 3 - Boundary Value Analysis - cover note length (max 1000)
+  ---
+  duration_ms: 18.866379
+  type: 'suite'
+  ...
+# Subtest: Boundary Value Analysis - application deadline
+    # Subtest: BVA-DL-01 deadline 1 second in the past -> rejected
+    ok 1 - BVA-DL-01 deadline 1 second in the past -> rejected
+      ---
+      duration_ms: 2.840814
+      type: 'test'
+      ...
+    # Subtest: BVA-DL-02 deadline 1 minute in the future -> accepted
+    ok 2 - BVA-DL-02 deadline 1 minute in the future -> accepted
+      ---
+      duration_ms: 3.105216
+      type: 'test'
+      ...
+    1..2
+ok 4 - Boundary Value Analysis - application deadline
+  ---
+  duration_ms: 6.124765
+  type: 'suite'
+  ...
+# Subtest: GET /api/applications
+    # Subtest: API-APL-01 student sees only their own applications
+    ok 1 - API-APL-01 student sees only their own applications
+      ---
+      duration_ms: 4.332606
+      type: 'test'
+      ...
+    # Subtest: API-APL-02 student without profile gets an empty list (student: null)
+    ok 2 - API-APL-02 student without profile gets an empty list (student: null)
+      ---
+      duration_ms: 9.208913
+      type: 'test'
+      ...
+    # Subtest: API-APL-03 company sees applications for its own listings only
+    ok 3 - API-APL-03 company sees applications for its own listings only
+      ---
+      duration_ms: 3.356395
+      type: 'test'
+      ...
+    # Subtest: API-APL-04 admin sees all applications
+    ok 4 - API-APL-04 admin sees all applications
+      ---
+      duration_ms: 2.103792
+      type: 'test'
+      ...
+    1..4
+ok 5 - GET /api/applications
+  ---
+  duration_ms: 19.359463
+  type: 'suite'
+  ...
+# Subtest: PATCH /api/applications/:id/status
+    # Subtest: API-STS-01 owner company moves application to interview -> 200 and timeline entry
+    ok 1 - API-STS-01 owner company moves application to interview -> 200 and timeline entry
+      ---
+      duration_ms: 3.259256
+      type: 'test'
+      ...
+    # Subtest: API-STS-02 default note is generated
+    ok 2 - API-STS-02 default note is generated
+      ---
+      duration_ms: 2.424999
+      type: 'test'
+      ...
+    # Subtest: API-STS-03 invalid status (including 'withdrawn') -> 400
+    ok 3 - API-STS-03 invalid status (including 'withdrawn') -> 400
+      ---
+      duration_ms: 4.202571
+      type: 'test'
+      ...
+    # Subtest: API-STS-04 another company -> 403
+    ok 4 - API-STS-04 another company -> 403
+      ---
+      duration_ms: 1.904288
+      type: 'test'
+      ...
+    # Subtest: API-STS-05 withdrawn application cannot be changed -> 400
+    ok 5 - API-STS-05 withdrawn application cannot be changed -> 400
+      ---
+      duration_ms: 2.629398
+      type: 'test'
+      ...
+    # Subtest: API-STS-06 missing application -> 404; student role -> 403
+    ok 6 - API-STS-06 missing application -> 404; student role -> 403
+      ---
+      duration_ms: 2.472503
+      type: 'test'
+      ...
+    1..6
+ok 6 - PATCH /api/applications/:id/status
+  ---
+  duration_ms: 17.139715
+  type: 'suite'
+  ...
+# Subtest: PATCH /api/applications/:id/withdraw and DELETE /api/applications/:id
+    # Subtest: API-WDR-01 student withdraws own submitted application -> 200
+    ok 1 - API-WDR-01 student withdraws own submitted application -> 200
+      ---
+      duration_ms: 3.747461
+      type: 'test'
+      ...
+    # Subtest: API-WDR-03 (TDD-2) offered / rejected / withdrawn applications cannot be withdrawn -> 400, nothing saved
+    ok 2 - API-WDR-03 (TDD-2) offered / rejected / withdrawn applications cannot be withdrawn -> 400, nothing saved
+      ---
+      duration_ms: 4.956418
+      type: 'test'
+      ...
+    # Subtest: API-WDR-02 someone else's application -> 404
+    ok 3 - API-WDR-02 someone else's application -> 404
+      ---
+      duration_ms: 1.512407
+      type: 'test'
+      ...
+    # Subtest: API-DLA-01 student deletes own application -> 200
+    ok 4 - API-DLA-01 student deletes own application -> 200
+      ---
+      duration_ms: 1.578833
+      type: 'test'
+      ...
+    # Subtest: API-DLA-02 deleting someone else's application -> 404
+    ok 5 - API-DLA-02 deleting someone else's application -> 404
+      ---
+      duration_ms: 1.521514
+      type: 'test'
+      ...
+    # Subtest: API-DLA-03 company cannot delete applications -> 403
+    ok 6 - API-DLA-03 company cannot delete applications -> 403
+      ---
+      duration_ms: 1.642119
+      type: 'test'
+      ...
+    1..6
+ok 7 - PATCH /api/applications/:id/withdraw and DELETE /api/applications/:id
+  ---
+  duration_ms: 15.206492
+  type: 'suite'
+  ...
+# Subtest: POST /api/auth/register
+    # Subtest: API-REG-01 valid student registration -> 201, token, normalised email, hashed password
+    ok 1 - API-REG-01 valid student registration -> 201, token, normalised email, hashed password
+      ---
+      duration_ms: 606.577416
+      type: 'test'
+      ...
+    # Subtest: API-REG-02 company registration stores trimmed organization
+    ok 2 - API-REG-02 company registration stores trimmed organization
+      ---
+      duration_ms: 283.750623
+      type: 'test'
+      ...
+    # Subtest: API-REG-03 invalid input -> 400 with per-field errors, nothing saved
+    ok 3 - API-REG-03 invalid input -> 400 with per-field errors, nothing saved
+      ---
+      duration_ms: 4.24214
+      type: 'test'
+      ...
+    # Subtest: API-REG-04 duplicate email -> 409
+    ok 4 - API-REG-04 duplicate email -> 409
+      ---
+      duration_ms: 2.591733
+      type: 'test'
+      ...
+# SyntaxError: Expected property name or '}' in JSON at position 1 (line 1 column 2)
+#     at JSON.parse (<anonymous>)
+#     at parse (/home/claude/work/SkillMatch/server/node_modules/body-parser/lib/types/json.js:91:21)
+#     at /home/claude/work/SkillMatch/server/node_modules/body-parser/lib/read.js:162:18
+#     at AsyncResource.runInAsyncScope (node:async_hooks:214:14)
+#     at invokeCallback (/home/claude/work/SkillMatch/server/node_modules/raw-body/index.js:238:16)
+#     at done (/home/claude/work/SkillMatch/server/node_modules/raw-body/index.js:227:7)
+#     at IncomingMessage.onEnd (/home/claude/work/SkillMatch/server/node_modules/raw-body/index.js:287:7)
+#     at IncomingMessage.emit (node:events:519:28)
+#     at endReadableNT (node:internal/streams/readable:1698:12)
+#     at process.processTicksAndRejections (node:internal/process/task_queues:89:21) {
+#   expose: true,
+#   statusCode: 400,
+#   status: 400,
+#   body: '{bad json',
+#   type: 'entity.parse.failed'
+# }
+# PayloadTooLargeError: request entity too large
+#     at readStream (/home/claude/work/SkillMatch/server/node_modules/raw-body/index.js:163:17)
+#     at getRawBody (/home/claude/work/SkillMatch/server/node_modules/raw-body/index.js:116:12)
+#     at read (/home/claude/work/SkillMatch/server/node_modules/body-parser/lib/read.js:113:3)
+#     at jsonParser (/home/claude/work/SkillMatch/server/node_modules/body-parser/lib/types/json.js:60:5)
+#     at Layer.handleRequest (/home/claude/work/SkillMatch/server/node_modules/router/lib/layer.js:152:17)
+#     at trimPrefix (/home/claude/work/SkillMatch/server/node_modules/router/index.js:342:13)
+#     at /home/claude/work/SkillMatch/server/node_modules/router/index.js:297:9
+#     at processParams (/home/claude/work/SkillMatch/server/node_modules/router/index.js:582:12)
+#     at next (/home/claude/work/SkillMatch/server/node_modules/router/index.js:291:5)
+#     at cors (/home/claude/work/SkillMatch/server/node_modules/cors/lib/index.js:188:7) {
+#   expected: 120080,
+#   length: 120080,
+#   limit: 102400,
+#   type: 'entity.too.large'
+# }
+    # Subtest: API-REG-05 malformed JSON body -> 400 (not 500)
+    not ok 5 - API-REG-05 malformed JSON body -> 400 (not 500)
+      ---
+      duration_ms: 8.180324
+      type: 'test'
+      location: '/home/claude/work/SkillMatch/server/tests/api/auth.api.test.js:53:3'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly equal:
+        
+        500 !== 400
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 400
+      actual: 500
+      operator: 'strictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///home/claude/work/SkillMatch/server/tests/api/auth.api.test.js:55:12)
+        process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: API-REG-06 body larger than the 100kb limit -> 413 (not 500)
+    not ok 6 - API-REG-06 body larger than the 100kb limit -> 413 (not 500)
+      ---
+      duration_ms: 4.433698
+      type: 'test'
+      location: '/home/claude/work/SkillMatch/server/tests/api/auth.api.test.js:57:3'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly equal:
+        
+        500 !== 413
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 413
+      actual: 500
+      operator: 'strictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///home/claude/work/SkillMatch/server/tests/api/auth.api.test.js:59:12)
+        process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    1..6
+not ok 8 - POST /api/auth/register
+  ---
+  duration_ms: 915.139589
+  type: 'suite'
+  location: '/home/claude/work/SkillMatch/server/tests/api/auth.api.test.js:17:1'
+  failureType: 'subtestsFailed'
+  error: '2 subtests failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# Subtest: POST /api/auth/login
+    # Subtest: API-LOG-01 correct credentials -> 200 with token and public user
+    ok 1 - API-LOG-01 correct credentials -> 200 with token and public user
+      ---
+      duration_ms: 4.312214
+      type: 'test'
+      ...
+    # Subtest: API-LOG-02 wrong password -> 401 generic message
+    ok 2 - API-LOG-02 wrong password -> 401 generic message
+      ---
+      duration_ms: 4.111829
+      type: 'test'
+      ...
+    # Subtest: API-LOG-03 unknown email -> same 401 message (no user enumeration)
+    ok 3 - API-LOG-03 unknown email -> same 401 message (no user enumeration)
+      ---
+      duration_ms: 4.299086
+      type: 'test'
+      ...
+    # Subtest: API-LOG-04 missing email or password -> 400
+    ok 4 - API-LOG-04 missing email or password -> 400
+      ---
+      duration_ms: 6.428147
+      type: 'test'
+      ...
+    1..4
+ok 9 - POST /api/auth/login
+  ---
+  duration_ms: 21.620647
+  type: 'suite'
+  ...
+# Subtest: GET /api/auth/me
+    # Subtest: API-ME-01 returns the logged-in user
+    ok 1 - API-ME-01 returns the logged-in user
+      ---
+      duration_ms: 6.320458
+      type: 'test'
+      ...
+    # Subtest: API-ME-02 no token -> 401
+    ok 2 - API-ME-02 no token -> 401
+      ---
+      duration_ms: 1.839847
+      type: 'test'
+      ...
+    1..2
+ok 10 - GET /api/auth/me
+  ---
+  duration_ms: 8.327928
+  type: 'suite'
+  ...
+# Subtest: general
+    # Subtest: API-GEN-01 health check
+    ok 1 - API-GEN-01 health check
+      ---
+      duration_ms: 3.881889
+      type: 'test'
+      ...
+    # Subtest: API-GEN-02 unknown route -> 404 JSON
+    ok 2 - API-GEN-02 unknown route -> 404 JSON
+      ---
+      duration_ms: 2.011598
+      type: 'test'
+      ...
+    1..2
+ok 11 - general
+  ---
+  duration_ms: 6.067021
+  type: 'suite'
+  ...
+# Subtest: GET /api/internships (list)
+    # Subtest: API-LST-01 student only sees active listings
+    ok 1 - API-LST-01 student only sees active listings
+      ---
+      duration_ms: 27.403169
+      type: 'test'
+      ...
+    # Subtest: API-LST-02 company only sees its own listings, and can filter closed ones
+    ok 2 - API-LST-02 company only sees its own listings, and can filter closed ones
+      ---
+      duration_ms: 3.91291
+      type: 'test'
+      ...
+    # Subtest: API-LST-03 student cannot use status=closed to see closed listings
+    ok 3 - API-LST-03 student cannot use status=closed to see closed listings
+      ---
+      duration_ms: 2.70419
+      type: 'test'
+      ...
+    # Subtest: API-LST-04 search is case-insensitive and regex characters are escaped
+    ok 4 - API-LST-04 search is case-insensitive and regex characters are escaped
+      ---
+      duration_ms: 2.684422
+      type: 'test'
+      ...
+    # Subtest: API-LST-05 location is an exact, case-insensitive match; degree filter passed through
+    ok 5 - API-LST-05 location is an exact, case-insensitive match; degree filter passed through
+      ---
+      duration_ms: 2.713662
+      type: 'test'
+      ...
+    # Subtest: API-LST-06 unknown sort falls back to newest
+    ok 6 - API-LST-06 unknown sort falls back to newest
+      ---
+      duration_ms: 8.822088
+      type: 'test'
+      ...
+    # Subtest: API-LST-07 sort=gpa sorts by lowest minimum GPA
+    ok 7 - API-LST-07 sort=gpa sorts by lowest minimum GPA
+      ---
+      duration_ms: 2.445593
+      type: 'test'
+      ...
+    # Subtest: BVA-LIM-01 limit=-5 -> limit 1
+    ok 8 - BVA-LIM-01 limit=-5 -> limit 1
+      ---
+      duration_ms: 1.965522
+      type: 'test'
+      ...
+    # Subtest: BVA-LIM-02 limit=1 -> limit 1
+    ok 9 - BVA-LIM-02 limit=1 -> limit 1
+      ---
+      duration_ms: 3.121502
+      type: 'test'
+      ...
+    # Subtest: BVA-LIM-03 limit=50 -> limit 50
+    ok 10 - BVA-LIM-03 limit=50 -> limit 50
+      ---
+      duration_ms: 2.0448
+      type: 'test'
+      ...
+    # Subtest: BVA-LIM-04 limit=51 -> limit 50
+    ok 11 - BVA-LIM-04 limit=51 -> limit 50
+      ---
+      duration_ms: 3.491077
+      type: 'test'
+      ...
+    # Subtest: BVA-LIM-05 no limit -> default 12 -> limit 12
+    ok 12 - BVA-LIM-05 no limit -> default 12 -> limit 12
+      ---
+      duration_ms: 1.740034
+      type: 'test'
+      ...
+    # Subtest: BVA-LIM-06 limit=0 is clamped to the minimum of 1
+    not ok 13 - BVA-LIM-06 limit=0 is clamped to the minimum of 1
+      ---
+      duration_ms: 2.217262
+      type: 'test'
+      location: '/home/claude/work/SkillMatch/server/tests/api/internships.api.test.js:100:3'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly equal:
+        
+        12 !== 1
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 1
+      actual: 12
+      operator: 'strictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///home/claude/work/SkillMatch/server/tests/api/internships.api.test.js:104:12)
+        process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: BVA-PG-01 page=0 and page=-1 are treated as page 1 (skip 0)
+    ok 14 - BVA-PG-01 page=0 and page=-1 are treated as page 1 (skip 0)
+      ---
+      duration_ms: 3.704448
+      type: 'test'
+      ...
+    # Subtest: BVA-PG-02 page=3, limit=5 skips 10 and reports total pages
+    ok 15 - BVA-PG-02 page=3, limit=5 skips 10 and reports total pages
+      ---
+      duration_ms: 1.605192
+      type: 'test'
+      ...
+    # Subtest: API-LST-08 unauthenticated -> 401
+    ok 16 - API-LST-08 unauthenticated -> 401
+      ---
+      duration_ms: 5.347203
+      type: 'test'
+      ...
+    1..16
+not ok 12 - GET /api/internships (list)
+  ---
+  duration_ms: 81.53699
+  type: 'suite'
+  location: '/home/claude/work/SkillMatch/server/tests/api/internships.api.test.js:33:1'
+  failureType: 'subtestsFailed'
+  error: '1 subtest failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# Subtest: GET /api/internships/:id
+    # Subtest: API-GET-01 invalid id -> 400
+    ok 1 - API-GET-01 invalid id -> 400
+      ---
+      duration_ms: 2.38008
+      type: 'test'
+      ...
+    # Subtest: API-GET-02 missing -> 404
+    ok 2 - API-GET-02 missing -> 404
+      ---
+      duration_ms: 2.985024
+      type: 'test'
+      ...
+    # Subtest: API-GET-03 company viewing another company's listing -> 403
+    ok 3 - API-GET-03 company viewing another company's listing -> 403
+      ---
+      duration_ms: 2.143787
+      type: 'test'
+      ...
+    # Subtest: API-GET-04 student viewing a closed listing -> 404
+    ok 4 - API-GET-04 student viewing a closed listing -> 404
+      ---
+      duration_ms: 3.15655
+      type: 'test'
+      ...
+    # Subtest: API-GET-05 student viewing an active listing -> 200
+    ok 5 - API-GET-05 student viewing an active listing -> 200
+      ---
+      duration_ms: 2.408392
+      type: 'test'
+      ...
+    # Subtest: API-GET-06 owner company viewing its closed listing -> 200
+    ok 6 - API-GET-06 owner company viewing its closed listing -> 200
+      ---
+      duration_ms: 1.447613
+      type: 'test'
+      ...
+    1..6
+ok 13 - GET /api/internships/:id
+  ---
+  duration_ms: 17.641388
+  type: 'suite'
+  ...
+# Subtest: POST /api/internships (create)
+    # Subtest: API-CRT-01 company creates listing -> 201, skills cleaned, owner forced to caller
+    ok 1 - API-CRT-01 company creates listing -> 201, skills cleaned, owner forced to caller
+      ---
+      duration_ms: 7.968783
+      type: 'test'
+      ...
+    # Subtest: API-CRT-02 student cannot create listings -> 403
+    ok 2 - API-CRT-02 student cannot create listings -> 403
+      ---
+      duration_ms: 4.913002
+      type: 'test'
+      ...
+    # Subtest: API-CRT-03 invalid listing -> 400 with field errors
+    ok 3 - API-CRT-03 invalid listing -> 400 with field errors
+      ---
+      duration_ms: 2.284006
+      type: 'test'
+      ...
+    1..3
+ok 14 - POST /api/internships (create)
+  ---
+  duration_ms: 15.319639
+  type: 'suite'
+  ...
+# Subtest: PUT /api/internships/:id (update)
+    # Subtest: API-UPD-01 owner updates -> 200, query scoped to owner, validators on
+    ok 1 - API-UPD-01 owner updates -> 200, query scoped to owner, validators on
+      ---
+      duration_ms: 2.199821
+      type: 'test'
+      ...
+    # Subtest: API-UPD-02 not owner / missing -> 404
+    ok 2 - API-UPD-02 not owner / missing -> 404
+      ---
+      duration_ms: 2.191617
+      type: 'test'
+      ...
+    # Subtest: API-UPD-03 invalid partial update -> 400
+    ok 3 - API-UPD-03 invalid partial update -> 400
+      ---
+      duration_ms: 1.868953
+      type: 'test'
+      ...
+    1..3
+ok 15 - PUT /api/internships/:id (update)
+  ---
+  duration_ms: 6.403416
+  type: 'suite'
+  ...
+# Subtest: DELETE /api/internships/:id
+    # Subtest: API-DEL-01 owner deletes -> listing, matches and applications removed
+    ok 1 - API-DEL-01 owner deletes -> listing, matches and applications removed
+      ---
+      duration_ms: 1.691876
+      type: 'test'
+      ...
+    # Subtest: API-DEL-02 not owner -> 404 and nothing cascaded
+    ok 2 - API-DEL-02 not owner -> 404 and nothing cascaded
+      ---
+      duration_ms: 1.807705
+      type: 'test'
+      ...
+    1..2
+ok 16 - DELETE /api/internships/:id
+  ---
+  duration_ms: 7.199725
+  type: 'suite'
+  ...
+# Subtest: A01 Broken Access Control
+    # Subtest: SEC-A01-01 every protected endpoint rejects anonymous requests with 401
+    ok 1 - SEC-A01-01 every protected endpoint rejects anonymous requests with 401
+      ---
+      duration_ms: 59.030819
+      type: 'test'
+      ...
+    # Subtest: SEC-A01-02 vertical escalation: a student cannot create, edit or delete listings or change statuses
+    ok 2 - SEC-A01-02 vertical escalation: a student cannot create, edit or delete listings or change statuses
+      ---
+      duration_ms: 9.432198
+      type: 'test'
+      ...
+    # Subtest: SEC-A01-03 horizontal escalation: company B cannot read, edit, delete or decide on company A's data
+    ok 3 - SEC-A01-03 horizontal escalation: company B cannot read, edit, delete or decide on company A's data
+      ---
+      duration_ms: 7.751841
+      type: 'test'
+      ...
+    # Subtest: SEC-A01-04 a user cannot self-register as admin
+    ok 4 - SEC-A01-04 a user cannot self-register as admin
+      ---
+      duration_ms: 2.040803
+      type: 'test'
+      ...
+    # Subtest: SEC-A01-05 forged JWTs are rejected: alg=none, tampered role, wrong secret
+    ok 5 - SEC-A01-05 forged JWTs are rejected: alg=none, tampered role, wrong secret
+      ---
+      duration_ms: 9.001113
+      type: 'test'
+      ...
+    1..5
+ok 17 - A01 Broken Access Control
+  ---
+  duration_ms: 92.197853
+  type: 'suite'
+  ...
+# Subtest: A03 Injection
+    # Subtest: SEC-A03-01 login: NoSQL operator in email is neutralised (coerced to string)
+    ok 1 - SEC-A03-01 login: NoSQL operator in email is neutralised (coerced to string)
+      ---
+      duration_ms: 3.05744
+      type: 'test'
+      ...
+    # Subtest: SEC-A03-02 search: regex metacharacters cannot build a catastrophic pattern (ReDoS)
+    ok 2 - SEC-A03-02 search: regex metacharacters cannot build a catastrophic pattern (ReDoS)
+      ---
+      duration_ms: 2.716198
+      type: 'test'
+      ...
+    # Subtest: SEC-A03-03 Mongoose passes a query operator through when it is used as an _id (risk confirmed)
+    ok 3 - SEC-A03-03 Mongoose passes a query operator through when it is used as an _id (risk confirmed)
+      ---
+      duration_ms: 2.652169
+      type: 'test'
+      ...
+    # Subtest: SEC-A03-04 apply: an operator object as the internship id is rejected before querying
+    not ok 4 - SEC-A03-04 apply: an operator object as the internship id is rejected before querying
+      ---
+      duration_ms: 3.355444
+      type: 'test'
+      location: '/home/claude/work/SkillMatch/server/tests/api/security.api.test.js:107:3'
+      failureType: 'testCodeFailure'
+      error: |-
+        operator object must not reach Internship.findOne
+        
+        201 !== 400
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 400
+      actual: 201
+      operator: 'strictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///home/claude/work/SkillMatch/server/tests/api/security.api.test.js:113:12)
+        process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    1..4
+not ok 18 - A03 Injection
+  ---
+  duration_ms: 12.550641
+  type: 'suite'
+  location: '/home/claude/work/SkillMatch/server/tests/api/security.api.test.js:85:1'
+  failureType: 'subtestsFailed'
+  error: '1 subtest failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# Subtest: A05 Security Misconfiguration
+    # Subtest: SEC-A05-01 framework fingerprint header X-Powered-By is not sent
+    not ok 1 - SEC-A05-01 framework fingerprint header X-Powered-By is not sent
+      ---
+      duration_ms: 2.471152
+      type: 'test'
+      location: '/home/claude/work/SkillMatch/server/tests/api/security.api.test.js:119:3'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly equal:
+        
+        'Express' !== null
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: ~
+      actual: 'Express'
+      operator: 'strictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///home/claude/work/SkillMatch/server/tests/api/security.api.test.js:121:12)
+        process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Promise.all (index 0)
+        async Suite.run (node:internal/test_runner/test:1442:7)
+        async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: SEC-A05-02 basic hardening headers are present
+    not ok 2 - SEC-A05-02 basic hardening headers are present
+      ---
+      duration_ms: 1.904267
+      type: 'test'
+      location: '/home/claude/work/SkillMatch/server/tests/api/security.api.test.js:123:3'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly equal:
+        
+        null !== 'nosniff'
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 'nosniff'
+      actual: ~
+      operator: 'strictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///home/claude/work/SkillMatch/server/tests/api/security.api.test.js:125:12)
+        process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: SEC-A05-03 CORS only allows the configured client origin
+    ok 3 - SEC-A05-03 CORS only allows the configured client origin
+      ---
+      duration_ms: 3.65071
+      type: 'test'
+      ...
+    # Subtest: SEC-A05-04 server errors do not leak stack traces
+    ok 4 - SEC-A05-04 server errors do not leak stack traces
+      ---
+      duration_ms: 7.298647
+      type: 'test'
+      ...
+    1..4
+not ok 19 - A05 Security Misconfiguration
+  ---
+  duration_ms: 15.694629
+  type: 'suite'
+  location: '/home/claude/work/SkillMatch/server/tests/api/security.api.test.js:118:1'
+  failureType: 'subtestsFailed'
+  error: '2 subtests failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# Subtest: A07 Identification and Authentication Failures
+    # Subtest: SEC-A07-01 weak passwords are refused at registration
+    ok 1 - SEC-A07-01 weak passwords are refused at registration
+      ---
+      duration_ms: 21.234814
+      type: 'test'
+      ...
+    # Subtest: SEC-A07-02 repeated failed logins are throttled (brute-force protection)
+    not ok 2 - SEC-A07-02 repeated failed logins are throttled (brute-force protection)
+      ---
+      duration_ms: 38.551109
+      type: 'test'
+      location: '/home/claude/work/SkillMatch/server/tests/api/security.api.test.js:160:3'
+      failureType: 'testCodeFailure'
+      error: 'expected a 429 within 30 attempts, got 401'
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: true
+      actual: false
+      operator: '=='
+      stack: |-
+        TestContext.<anonymous> (file:///home/claude/work/SkillMatch/server/tests/api/security.api.test.js:167:12)
+        process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    1..2
+not ok 20 - A07 Identification and Authentication Failures
+  ---
+  duration_ms: 60.101304
+  type: 'suite'
+  location: '/home/claude/work/SkillMatch/server/tests/api/security.api.test.js:151:1'
+  failureType: 'subtestsFailed'
+  error: '1 subtest failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# Subtest: /api/students/profile
+    # Subtest: API-PRF-01 student with no profile yet gets null
+    ok 1 - API-PRF-01 student with no profile yet gets null
+      ---
+      duration_ms: 29.355734
+      type: 'test'
+      ...
+    # Subtest: API-PRF-02 PUT upserts a cleaned profile for the logged-in user only
+    ok 2 - API-PRF-02 PUT upserts a cleaned profile for the logged-in user only
+      ---
+      duration_ms: 10.502583
+      type: 'test'
+      ...
+    # Subtest: API-PRF-03 invalid profile -> 400 and no write
+    ok 3 - API-PRF-03 invalid profile -> 400 and no write
+      ---
+      duration_ms: 3.470039
+      type: 'test'
+      ...
+    # Subtest: API-PRF-04 company cannot use the student profile API -> 403
+    ok 4 - API-PRF-04 company cannot use the student profile API -> 403
+      ---
+      duration_ms: 2.26217
+      type: 'test'
+      ...
+    1..4
+ok 21 - /api/students/profile
+  ---
+  duration_ms: 50.69012
+  type: 'suite'
+  ...
+# Subtest: auth middleware
+    # Subtest: WB-AUTH-01 no Authorization header -> 401
+    ok 1 - WB-AUTH-01 no Authorization header -> 401
+      ---
+      duration_ms: 0.878796
+      type: 'test'
+      ...
+    # Subtest: WB-AUTH-02 malformed token -> 401 Invalid or expired token
+    ok 2 - WB-AUTH-02 malformed token -> 401 Invalid or expired token
+      ---
+      duration_ms: 0.566926
+      type: 'test'
+      ...
+    # Subtest: WB-AUTH-03 token signed with a different secret -> 401
+    ok 3 - WB-AUTH-03 token signed with a different secret -> 401
+      ---
+      duration_ms: 2.640061
+      type: 'test'
+      ...
+    # Subtest: WB-AUTH-04 expired token -> 401
+    ok 4 - WB-AUTH-04 expired token -> 401
+      ---
+      duration_ms: 0.684341
+      type: 'test'
+      ...
+    # Subtest: WB-AUTH-05 valid token but user deleted -> 401 User no longer exists
+    ok 5 - WB-AUTH-05 valid token but user deleted -> 401 User no longer exists
+      ---
+      duration_ms: 0.935628
+      type: 'test'
+      ...
+    # Subtest: WB-AUTH-06 valid token -> req.user set (password excluded) and next() called
+    ok 6 - WB-AUTH-06 valid token -> req.user set (password excluded) and next() called
+      ---
+      duration_ms: 1.087229
+      type: 'test'
+      ...
+    1..6
+ok 22 - auth middleware
+  ---
+  duration_ms: 7.562972
+  type: 'suite'
+  ...
+# Subtest: allow (role guard)
+    # Subtest: WB-ALW-01 permitted role calls next()
+    ok 1 - WB-ALW-01 permitted role calls next()
+      ---
+      duration_ms: 0.273116
+      type: 'test'
+      ...
+    # Subtest: WB-ALW-02 other role -> 403
+    ok 2 - WB-ALW-02 other role -> 403
+      ---
+      duration_ms: 0.152239
+      type: 'test'
+      ...
+    1..2
+ok 23 - allow (role guard)
+  ---
+  duration_ms: 0.539102
+  type: 'suite'
+  ...
+# Subtest: validId
+    # Subtest: WB-VID-01 valid ObjectId passes
+    ok 1 - WB-VID-01 valid ObjectId passes
+      ---
+      duration_ms: 0.398788
+      type: 'test'
+      ...
+    # Subtest: WB-VID-02 invalid id -> 400
+    ok 2 - WB-VID-02 invalid id -> 400
+      ---
+      duration_ms: 0.203795
+      type: 'test'
+      ...
+    1..2
+ok 24 - validId
+  ---
+  duration_ms: 0.67622
+  type: 'suite'
+  ...
+# Subtest: wrap + error handling
+    # Subtest: WB-WRP-01 forwards a rejected promise to next(err)
+    ok 1 - WB-WRP-01 forwards a rejected promise to next(err)
+      ---
+      duration_ms: 0.20971
+      type: 'test'
+      ...
+    # Subtest: WB-ERR-01 Mongoose ValidationError -> 400 with field map
+    ok 2 - WB-ERR-01 Mongoose ValidationError -> 400 with field map
+      ---
+      duration_ms: 0.147025
+      type: 'test'
+      ...
+    # Subtest: WB-ERR-02 CastError -> 400
+    ok 3 - WB-ERR-02 CastError -> 400
+      ---
+      duration_ms: 0.072019
+      type: 'test'
+      ...
+    # Subtest: WB-ERR-03 duplicate key (11000) -> 409
+    ok 4 - WB-ERR-03 duplicate key (11000) -> 409
+      ---
+      duration_ms: 0.081526
+      type: 'test'
+      ...
+    # Subtest: WB-ERR-04 unknown error -> 500 without leaking details
+    ok 5 - WB-ERR-04 unknown error -> 500 without leaking details
+      ---
+      duration_ms: 0.127082
+      type: 'test'
+      ...
+    # Subtest: WB-ERR-05 notFound -> 404 naming the route
+    ok 6 - WB-ERR-05 notFound -> 404 naming the route
+      ---
+      duration_ms: 0.220717
+      type: 'test'
+      ...
+    1..6
+ok 25 - wrap + error handling
+  ---
+  duration_ms: 0.961162
+  type: 'suite'
+  ...
+# Subtest: TDD-1 listing deadline must not be in the past (server side)
+    # Subtest: TDD-1a rejects yesterday's date
+    ok 1 - TDD-1a rejects yesterday's date
+      ---
+      duration_ms: 0.775353
+      type: 'test'
+      ...
+    # Subtest: TDD-1b rejects a date a year ago
+    ok 2 - TDD-1b rejects a date a year ago
+      ---
+      duration_ms: 0.101617
+      type: 'test'
+      ...
+    # Subtest: TDD-1c accepts today's date (boundary)
+    ok 3 - TDD-1c accepts today's date (boundary)
+      ---
+      duration_ms: 0.098727
+      type: 'test'
+      ...
+    # Subtest: TDD-1d accepts tomorrow
+    ok 4 - TDD-1d accepts tomorrow
+      ---
+      duration_ms: 0.060571
+      type: 'test'
+      ...
+    # Subtest: TDD-1e still reports an unparseable date as invalid, not as past
+    ok 5 - TDD-1e still reports an unparseable date as invalid, not as past
+      ---
+      duration_ms: 0.05853
+      type: 'test'
+      ...
+    # Subtest: TDD-1f no deadline (open-ended listing) is allowed
+    ok 6 - TDD-1f no deadline (open-ended listing) is allowed
+      ---
+      duration_ms: 0.05644
+      type: 'test'
+      ...
+    1..6
+ok 26 - TDD-1 listing deadline must not be in the past (server side)
+  ---
+  duration_ms: 1.858258
+  type: 'suite'
+  ...
+# Subtest: TDD-1 refactor: checkDeadline with a fixed clock
+    # Subtest: TDD-1g 2026-11-22T23:59:59Z is past
+    ok 1 - TDD-1g 2026-11-22T23:59:59Z is past
+      ---
+      duration_ms: 0.123132
+      type: 'test'
+      ...
+    # Subtest: TDD-1h 2026-11-23 (start of today) is allowed
+    ok 2 - TDD-1h 2026-11-23 (start of today) is allowed
+      ---
+      duration_ms: 0.17382
+      type: 'test'
+      ...
+    # Subtest: TDD-1i empty value is allowed
+    ok 3 - TDD-1i empty value is allowed
+      ---
+      duration_ms: 0.121873
+      type: 'test'
+      ...
+    1..3
+ok 27 - TDD-1 refactor: checkDeadline with a fixed clock
+  ---
+  duration_ms: 0.609467
+  type: 'suite'
+  ...
+# Subtest: TDD-2 canWithdraw(status)
+    # Subtest: TDD-2 an application that is 'submitted' can be withdrawn
+    ok 1 - TDD-2 an application that is 'submitted' can be withdrawn
+      ---
+      duration_ms: 0.523714
+      type: 'test'
+      ...
+    # Subtest: TDD-2 an application that is 'reviewing' can be withdrawn
+    ok 2 - TDD-2 an application that is 'reviewing' can be withdrawn
+      ---
+      duration_ms: 0.113005
+      type: 'test'
+      ...
+    # Subtest: TDD-2 an application that is 'shortlisted' can be withdrawn
+    ok 3 - TDD-2 an application that is 'shortlisted' can be withdrawn
+      ---
+      duration_ms: 0.049938
+      type: 'test'
+      ...
+    # Subtest: TDD-2 an application that is 'interview' can be withdrawn
+    ok 4 - TDD-2 an application that is 'interview' can be withdrawn
+      ---
+      duration_ms: 0.07719
+      type: 'test'
+      ...
+    # Subtest: TDD-2 an application that is 'offered' cannot be withdrawn
+    ok 5 - TDD-2 an application that is 'offered' cannot be withdrawn
+      ---
+      duration_ms: 0.060614
+      type: 'test'
+      ...
+    # Subtest: TDD-2 an application that is 'rejected' cannot be withdrawn
+    ok 6 - TDD-2 an application that is 'rejected' cannot be withdrawn
+      ---
+      duration_ms: 0.039498
+      type: 'test'
+      ...
+    # Subtest: TDD-2 an application that is 'withdrawn' cannot be withdrawn
+    ok 7 - TDD-2 an application that is 'withdrawn' cannot be withdrawn
+      ---
+      duration_ms: 0.049942
+      type: 'test'
+      ...
+    # Subtest: TDD-2 an unknown status cannot be withdrawn
+    ok 8 - TDD-2 an unknown status cannot be withdrawn
+      ---
+      duration_ms: 0.094067
+      type: 'test'
+      ...
+    1..8
+ok 28 - TDD-2 canWithdraw(status)
+  ---
+  duration_ms: 1.714848
+  type: 'suite'
+  ...
+# Subtest: TDD-2 refactor: status lists derive from the model
+    # Subtest: TDD-2r open + final statuses cover every model status exactly once
+    ok 1 - TDD-2r open + final statuses cover every model status exactly once
+      ---
+      duration_ms: 0.546212
+      type: 'test'
+      ...
+    # Subtest: TDD-2r companies can set every status except 'withdrawn'
+    ok 2 - TDD-2r companies can set every status except 'withdrawn'
+      ---
+      duration_ms: 0.182617
+      type: 'test'
+      ...
+    1..2
+ok 29 - TDD-2 refactor: status lists derive from the model
+  ---
+  duration_ms: 0.880315
+  type: 'suite'
+  ...
+# Subtest: Equivalence Partitioning - registration password
+    # Subtest: EP-PW-01 valid: >=8 chars with letters and digits
+    ok 1 - EP-PW-01 valid: >=8 chars with letters and digits
+      ---
+      duration_ms: 0.617962
+      type: 'test'
+      ...
+    # Subtest: EP-PW-02 invalid: shorter than 8
+    ok 2 - EP-PW-02 invalid: shorter than 8
+      ---
+      duration_ms: 0.103061
+      type: 'test'
+      ...
+    # Subtest: EP-PW-03 invalid: letters only
+    ok 3 - EP-PW-03 invalid: letters only
+      ---
+      duration_ms: 0.075891
+      type: 'test'
+      ...
+    # Subtest: EP-PW-04 invalid: digits only
+    ok 4 - EP-PW-04 invalid: digits only
+      ---
+      duration_ms: 0.056073
+      type: 'test'
+      ...
+    # Subtest: EP-PW-05 invalid: not a string
+    ok 5 - EP-PW-05 invalid: not a string
+      ---
+      duration_ms: 0.057764
+      type: 'test'
+      ...
+    # Subtest: EP-PW-06 invalid: missing
+    ok 6 - EP-PW-06 invalid: missing
+      ---
+      duration_ms: 0.064453
+      type: 'test'
+      ...
+    1..6
+ok 30 - Equivalence Partitioning - registration password
+  ---
+  duration_ms: 1.675665
+  type: 'suite'
+  ...
+# Subtest: Equivalence Partitioning - account role / organization
+    # Subtest: EP-RL-01 valid: student without organization
+    ok 1 - EP-RL-01 valid: student without organization
+      ---
+      duration_ms: 0.596742
+      type: 'test'
+      ...
+    # Subtest: EP-RL-02 valid: company with organization
+    ok 2 - EP-RL-02 valid: company with organization
+      ---
+      duration_ms: 0.190924
+      type: 'test'
+      ...
+    # Subtest: EP-RL-03 invalid: company with blank organization
+    ok 3 - EP-RL-03 invalid: company with blank organization
+      ---
+      duration_ms: 0.183194
+      type: 'test'
+      ...
+    # Subtest: EP-RL-04 invalid: self-registering as admin is rejected
+    ok 4 - EP-RL-04 invalid: self-registering as admin is rejected
+      ---
+      duration_ms: 0.138256
+      type: 'test'
+      ...
+    # Subtest: EP-RL-05 invalid: missing role
+    ok 5 - EP-RL-05 invalid: missing role
+      ---
+      duration_ms: 0.057129
+      type: 'test'
+      ...
+    1..5
+ok 31 - Equivalence Partitioning - account role / organization
+  ---
+  duration_ms: 1.339609
+  type: 'suite'
+  ...
+# Subtest: Equivalence Partitioning - email
+    # Subtest: EP-EM-01 valid address (surrounding spaces trimmed)
+    ok 1 - EP-EM-01 valid address (surrounding spaces trimmed)
+      ---
+      duration_ms: 0.086929
+      type: 'test'
+      ...
+    # Subtest: EP-EM-02 invalid: "no-at-sign.com"
+    ok 2 - EP-EM-02 invalid: "no-at-sign.com"
+      ---
+      duration_ms: 0.040218
+      type: 'test'
+      ...
+    # Subtest: EP-EM-03 invalid: "a@b"
+    ok 3 - EP-EM-03 invalid: "a@b"
+      ---
+      duration_ms: 0.026649
+      type: 'test'
+      ...
+    # Subtest: EP-EM-04 invalid: "a b@c.com"
+    ok 4 - EP-EM-04 invalid: "a b@c.com"
+      ---
+      duration_ms: 0.027023
+      type: 'test'
+      ...
+    # Subtest: EP-EM-05 invalid: ""
+    ok 5 - EP-EM-05 invalid: ""
+      ---
+      duration_ms: 0.02696
+      type: 'test'
+      ...
+    # Subtest: EP-EM-06 invalid: non-string (object) is rejected, not coerced
+    ok 6 - EP-EM-06 invalid: non-string (object) is rejected, not coerced
+      ---
+      duration_ms: 0.039652
+      type: 'test'
+      ...
+    1..6
+ok 32 - Equivalence Partitioning - email
+  ---
+  duration_ms: 0.33206
+  type: 'suite'
+  ...
+# Subtest: Equivalence Partitioning - profile GPA
+    # Subtest: EP-GPA-01 valid: number inside 0..4
+    ok 1 - EP-GPA-01 valid: number inside 0..4
+      ---
+      duration_ms: 0.181701
+      type: 'test'
+      ...
+    # Subtest: EP-GPA-02 valid: numeric string inside 0..4
+    ok 2 - EP-GPA-02 valid: numeric string inside 0..4
+      ---
+      duration_ms: 0.051185
+      type: 'test'
+      ...
+    # Subtest: EP-GPA-03 invalid: below range
+    ok 3 - EP-GPA-03 invalid: below range
+      ---
+      duration_ms: 0.047774
+      type: 'test'
+      ...
+    # Subtest: EP-GPA-04 invalid: above range
+    ok 4 - EP-GPA-04 invalid: above range
+      ---
+      duration_ms: 0.028304
+      type: 'test'
+      ...
+    # Subtest: EP-GPA-05 invalid: non-numeric text
+    ok 5 - EP-GPA-05 invalid: non-numeric text
+      ---
+      duration_ms: 0.030191
+      type: 'test'
+      ...
+    # Subtest: EP-GPA-06 invalid: empty string
+    ok 6 - EP-GPA-06 invalid: empty string
+      ---
+      duration_ms: 0.027866
+      type: 'test'
+      ...
+    # Subtest: EP-GPA-07 invalid: null
+    ok 7 - EP-GPA-07 invalid: null
+      ---
+      duration_ms: 0.027673
+      type: 'test'
+      ...
+    1..7
+ok 33 - Equivalence Partitioning - profile GPA
+  ---
+  duration_ms: 0.484734
+  type: 'suite'
+  ...
+# Subtest: Equivalence Partitioning - non-numeric types for numeric fields
+    # Subtest: EP-GPA-08 invalid: boolean true is not a GPA
+    not ok 1 - EP-GPA-08 invalid: boolean true is not a GPA
+      ---
+      duration_ms: 2.922767
+      type: 'test'
+      location: '/home/claude/work/SkillMatch/server/tests/unit/validators.test.js:94:3'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly equal:
+        + actual - expected
+        
+        + undefined
+        - 'GPA must be between 0 and 4'
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 'GPA must be between 0 and 4'
+      operator: 'strictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///home/claude/work/SkillMatch/server/tests/unit/validators.test.js:95:12)
+        Test.runInAsyncScope (node:async_hooks:214:14)
+        Test.run (node:internal/test_runner/test:1047:25)
+        Test.start (node:internal/test_runner/test:944:17)
+        node:internal/test_runner/test:1440:71
+        node:internal/per_context/primordials:466:82
+        new Promise (<anonymous>)
+        new SafePromise (node:internal/per_context/primordials:435:3)
+        node:internal/per_context/primordials:466:9
+        Array.map (<anonymous>)
+      ...
+    # Subtest: EP-GPA-09 invalid: array is not a GPA
+    not ok 2 - EP-GPA-09 invalid: array is not a GPA
+      ---
+      duration_ms: 0.260405
+      type: 'test'
+      location: '/home/claude/work/SkillMatch/server/tests/unit/validators.test.js:96:3'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly equal:
+        + actual - expected
+        
+        + undefined
+        - 'GPA must be between 0 and 4'
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 'GPA must be between 0 and 4'
+      operator: 'strictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///home/claude/work/SkillMatch/server/tests/unit/validators.test.js:97:12)
+        Test.runInAsyncScope (node:async_hooks:214:14)
+        Test.run (node:internal/test_runner/test:1047:25)
+        Suite.processPendingSubtests (node:internal/test_runner/test:744:18)
+        Test.postRun (node:internal/test_runner/test:1173:19)
+        Test.run (node:internal/test_runner/test:1101:12)
+        async Promise.all (index 0)
+        async Suite.run (node:internal/test_runner/test:1442:7)
+        async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: EP-OPN-01 invalid: boolean true is not a number of openings
+    not ok 3 - EP-OPN-01 invalid: boolean true is not a number of openings
+      ---
+      duration_ms: 5.55902
+      type: 'test'
+      location: '/home/claude/work/SkillMatch/server/tests/unit/validators.test.js:98:3'
+      failureType: 'testCodeFailure'
+      error: |-
+        The expression evaluated to a falsy value:
+        
+          assert.ok("openings" in validateInternship(job({ openings: true })))
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: true
+      actual: false
+      operator: '=='
+      stack: |-
+        TestContext.<anonymous> (file:///home/claude/work/SkillMatch/server/tests/unit/validators.test.js:99:12)
+        Test.runInAsyncScope (node:async_hooks:214:14)
+        Test.run (node:internal/test_runner/test:1047:25)
+        Suite.processPendingSubtests (node:internal/test_runner/test:744:18)
+        Test.postRun (node:internal/test_runner/test:1173:19)
+        Test.run (node:internal/test_runner/test:1101:12)
+        async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: EP-OPN-02 invalid: empty array minimumGpa is rejected
+    not ok 4 - EP-OPN-02 invalid: empty array minimumGpa is rejected
+      ---
+      duration_ms: 0.289457
+      type: 'test'
+      location: '/home/claude/work/SkillMatch/server/tests/unit/validators.test.js:100:3'
+      failureType: 'testCodeFailure'
+      error: |-
+        The expression evaluated to a falsy value:
+        
+          assert.ok("minimumGpa" in validateInternship(job({ minimumGpa: [] })))
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: true
+      actual: false
+      operator: '=='
+      stack: |-
+        TestContext.<anonymous> (file:///home/claude/work/SkillMatch/server/tests/unit/validators.test.js:101:12)
+        Test.runInAsyncScope (node:async_hooks:214:14)
+        Test.run (node:internal/test_runner/test:1047:25)
+        Suite.processPendingSubtests (node:internal/test_runner/test:744:18)
+        Test.postRun (node:internal/test_runner/test:1173:19)
+        Test.run (node:internal/test_runner/test:1101:12)
+        async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    1..4
+not ok 34 - Equivalence Partitioning - non-numeric types for numeric fields
+  ---
+  duration_ms: 9.227202
+  type: 'suite'
+  location: '/home/claude/work/SkillMatch/server/tests/unit/validators.test.js:93:1'
+  failureType: 'subtestsFailed'
+  error: '4 subtests failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# Subtest: Boundary Value Analysis - GPA (0..4)
+    # Subtest: BVA-GPA profile gpa=-0.01 -> rejected
+    ok 1 - BVA-GPA profile gpa=-0.01 -> rejected
+      ---
+      duration_ms: 0.138218
+      type: 'test'
+      ...
+    # Subtest: BVA-GPA internship minimumGpa=-0.01 -> rejected
+    ok 2 - BVA-GPA internship minimumGpa=-0.01 -> rejected
+      ---
+      duration_ms: 0.051762
+      type: 'test'
+      ...
+    # Subtest: BVA-GPA profile gpa=0 -> accepted
+    ok 3 - BVA-GPA profile gpa=0 -> accepted
+      ---
+      duration_ms: 0.04676
+      type: 'test'
+      ...
+    # Subtest: BVA-GPA internship minimumGpa=0 -> accepted
+    ok 4 - BVA-GPA internship minimumGpa=0 -> accepted
+      ---
+      duration_ms: 0.082066
+      type: 'test'
+      ...
+    # Subtest: BVA-GPA profile gpa=0.01 -> accepted
+    ok 5 - BVA-GPA profile gpa=0.01 -> accepted
+      ---
+      duration_ms: 0.034985
+      type: 'test'
+      ...
+    # Subtest: BVA-GPA internship minimumGpa=0.01 -> accepted
+    ok 6 - BVA-GPA internship minimumGpa=0.01 -> accepted
+      ---
+      duration_ms: 0.031978
+      type: 'test'
+      ...
+    # Subtest: BVA-GPA profile gpa=3.99 -> accepted
+    ok 7 - BVA-GPA profile gpa=3.99 -> accepted
+      ---
+      duration_ms: 0.069694
+      type: 'test'
+      ...
+    # Subtest: BVA-GPA internship minimumGpa=3.99 -> accepted
+    ok 8 - BVA-GPA internship minimumGpa=3.99 -> accepted
+      ---
+      duration_ms: 0.034181
+      type: 'test'
+      ...
+    # Subtest: BVA-GPA profile gpa=4 -> accepted
+    ok 9 - BVA-GPA profile gpa=4 -> accepted
+      ---
+      duration_ms: 0.029994
+      type: 'test'
+      ...
+    # Subtest: BVA-GPA internship minimumGpa=4 -> accepted
+    ok 10 - BVA-GPA internship minimumGpa=4 -> accepted
+      ---
+      duration_ms: 0.071243
+      type: 'test'
+      ...
+    # Subtest: BVA-GPA profile gpa=4.01 -> rejected
+    ok 11 - BVA-GPA profile gpa=4.01 -> rejected
+      ---
+      duration_ms: 0.035627
+      type: 'test'
+      ...
+    # Subtest: BVA-GPA internship minimumGpa=4.01 -> rejected
+    ok 12 - BVA-GPA internship minimumGpa=4.01 -> rejected
+      ---
+      duration_ms: 0.033298
+      type: 'test'
+      ...
+    1..12
+ok 35 - Boundary Value Analysis - GPA (0..4)
+  ---
+  duration_ms: 0.825151
+  type: 'suite'
+  ...
+# Subtest: Boundary Value Analysis - password length (min 8)
+    # Subtest: BVA-PW length 7 -> rejected
+    ok 1 - BVA-PW length 7 -> rejected
+      ---
+      duration_ms: 0.166784
+      type: 'test'
+      ...
+    # Subtest: BVA-PW length 8 -> accepted
+    ok 2 - BVA-PW length 8 -> accepted
+      ---
+      duration_ms: 0.036559
+      type: 'test'
+      ...
+    # Subtest: BVA-PW length 9 -> accepted
+    ok 3 - BVA-PW length 9 -> accepted
+      ---
+      duration_ms: 0.029044
+      type: 'test'
+      ...
+    1..3
+ok 36 - Boundary Value Analysis - password length (min 8)
+  ---
+  duration_ms: 0.288442
+  type: 'suite'
+  ...
+# Subtest: Boundary Value Analysis - internship text and openings
+    # Subtest: BVA-TTL title length 2 -> rejected
+    ok 1 - BVA-TTL title length 2 -> rejected
+      ---
+      duration_ms: 0.171454
+      type: 'test'
+      ...
+    # Subtest: BVA-TTL title length 3 -> accepted
+    ok 2 - BVA-TTL title length 3 -> accepted
+      ---
+      duration_ms: 0.045878
+      type: 'test'
+      ...
+    # Subtest: BVA-TTL title length 4 -> accepted
+    ok 3 - BVA-TTL title length 4 -> accepted
+      ---
+      duration_ms: 0.033213
+      type: 'test'
+      ...
+    # Subtest: BVA-DSC description length 9 -> rejected
+    ok 4 - BVA-DSC description length 9 -> rejected
+      ---
+      duration_ms: 0.056132
+      type: 'test'
+      ...
+    # Subtest: BVA-DSC description length 10 -> accepted
+    ok 5 - BVA-DSC description length 10 -> accepted
+      ---
+      duration_ms: 0.027098
+      type: 'test'
+      ...
+    # Subtest: BVA-DSC description length 11 -> accepted
+    ok 6 - BVA-DSC description length 11 -> accepted
+      ---
+      duration_ms: 0.026831
+      type: 'test'
+      ...
+    # Subtest: BVA-OPN openings=0 -> rejected
+    ok 7 - BVA-OPN openings=0 -> rejected
+      ---
+      duration_ms: 0.041264
+      type: 'test'
+      ...
+    # Subtest: BVA-OPN openings=1 -> accepted
+    ok 8 - BVA-OPN openings=1 -> accepted
+      ---
+      duration_ms: 0.02691
+      type: 'test'
+      ...
+    # Subtest: BVA-OPN openings=2 -> accepted
+    ok 9 - BVA-OPN openings=2 -> accepted
+      ---
+      duration_ms: 0.027194
+      type: 'test'
+      ...
+    # Subtest: BVA-OPN openings=1.5 -> rejected
+    ok 10 - BVA-OPN openings=1.5 -> rejected
+      ---
+      duration_ms: 0.028025
+      type: 'test'
+      ...
+    # Subtest: BVA-NAME name length 1 -> rejected
+    ok 11 - BVA-NAME name length 1 -> rejected
+      ---
+      duration_ms: 0.08524
+      type: 'test'
+      ...
+    # Subtest: BVA-NAME name length 2 -> accepted
+    ok 12 - BVA-NAME name length 2 -> accepted
+      ---
+      duration_ms: 0.029389
+      type: 'test'
+      ...
+    # Subtest: BVA-NAME name length 3 -> accepted
+    ok 13 - BVA-NAME name length 3 -> accepted
+      ---
+      duration_ms: 0.02876
+      type: 'test'
+      ...
+    1..13
+ok 37 - Boundary Value Analysis - internship text and openings
+  ---
+  duration_ms: 0.795262
+  type: 'suite'
+  ...
+# Subtest: Boundary Value Analysis - experience months
+    # Subtest: BVA-EXP -1 rejected
+    ok 1 - BVA-EXP -1 rejected
+      ---
+      duration_ms: 0.103548
+      type: 'test'
+      ...
+    # Subtest: BVA-EXP 0 accepted
+    ok 2 - BVA-EXP 0 accepted
+      ---
+      duration_ms: 0.042111
+      type: 'test'
+      ...
+    # Subtest: BVA-EXP 600 accepted (schema maximum)
+    ok 3 - BVA-EXP 600 accepted (schema maximum)
+      ---
+      duration_ms: 0.034193
+      type: 'test'
+      ...
+    1..3
+ok 38 - Boundary Value Analysis - experience months
+  ---
+  duration_ms: 0.338627
+  type: 'suite'
+  ...
+# Subtest: validateInternship - other rules
+    # Subtest: UT-INT-01 a complete valid listing has no errors
+    ok 1 - UT-INT-01 a complete valid listing has no errors
+      ---
+      duration_ms: 0.10194
+      type: 'test'
+      ...
+    # Subtest: UT-INT-02 requires at least one skill
+    ok 2 - UT-INT-02 requires at least one skill
+      ---
+      duration_ms: 0.049263
+      type: 'test'
+      ...
+    # Subtest: UT-INT-03 rejects skills that are not an array
+    ok 3 - UT-INT-03 rejects skills that are not an array
+      ---
+      duration_ms: 0.035305
+      type: 'test'
+      ...
+    # Subtest: UT-INT-04 rejects an unknown degree
+    ok 4 - UT-INT-04 rejects an unknown degree
+      ---
+      duration_ms: 0.043701
+      type: 'test'
+      ...
+    # Subtest: UT-INT-05 rejects an unparseable deadline
+    ok 5 - UT-INT-05 rejects an unparseable deadline
+      ---
+      duration_ms: 0.044382
+      type: 'test'
+      ...
+    # Subtest: UT-INT-06 partial update only checks the fields sent
+    ok 6 - UT-INT-06 partial update only checks the fields sent
+      ---
+      duration_ms: 0.043403
+      type: 'test'
+      ...
+    # Subtest: UT-INT-07 partial update still validates a field that is sent
+    ok 7 - UT-INT-07 partial update still validates a field that is sent
+      ---
+      duration_ms: 0.042232
+      type: 'test'
+      ...
+    1..7
+ok 39 - validateInternship - other rules
+  ---
+  duration_ms: 0.455234
+  type: 'suite'
+  ...
+# Subtest: validateProfile - other rules
+    # Subtest: UT-PRF-01 complete valid profile has no errors
+    ok 1 - UT-PRF-01 complete valid profile has no errors
+      ---
+      duration_ms: 0.058154
+      type: 'test'
+      ...
+    # Subtest: UT-PRF-02 rejects unknown degree
+    ok 2 - UT-PRF-02 rejects unknown degree
+      ---
+      duration_ms: 0.088157
+      type: 'test'
+      ...
+    # Subtest: UT-PRF-03 requires field of study (min 2 chars)
+    ok 3 - UT-PRF-03 requires field of study (min 2 chars)
+      ---
+      duration_ms: 0.048785
+      type: 'test'
+      ...
+    # Subtest: UT-PRF-04 requires at least one skill
+    ok 4 - UT-PRF-04 requires at least one skill
+      ---
+      duration_ms: 0.043558
+      type: 'test'
+      ...
+    1..4
+ok 40 - validateProfile - other rules
+  ---
+  duration_ms: 0.308103
+  type: 'suite'
+  ...
+# Subtest: helpers
+    # Subtest: UT-SKL-01 cleanSkills trims, drops blanks and removes duplicates
+    ok 1 - UT-SKL-01 cleanSkills trims, drops blanks and removes duplicates
+      ---
+      duration_ms: 0.218123
+      type: 'test'
+      ...
+    # Subtest: UT-SKL-02 cleanSkills tolerates non-arrays
+    ok 2 - UT-SKL-02 cleanSkills tolerates non-arrays
+      ---
+      duration_ms: 0.047021
+      type: 'test'
+      ...
+    # Subtest: UT-RGX-01 escapeRegex neutralises regex metacharacters
+    ok 3 - UT-RGX-01 escapeRegex neutralises regex metacharacters
+      ---
+      duration_ms: 1.610756
+      type: 'test'
+      ...
+    1..3
+ok 41 - helpers
+  ---
+  duration_ms: 1.958345
+  type: 'suite'
+  ...
+1..41
+# tests 203
+# suites 41
+# pass 190
+# fail 13
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3421.170085

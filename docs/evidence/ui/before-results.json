@@ -1,0 +1,62 @@
+[
+  {
+    "id": "UI-01",
+    "desc": "Login page renders",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "id": "UI-02",
+    "desc": "Empty registration shows inline field errors",
+    "pass": true,
+    "detail": "Name must be at least 2 characters | Enter a valid email address | Password must be at least 8 characters"
+  },
+  {
+    "id": "UI-03",
+    "desc": "Company registration requires organization",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "id": "UI-04",
+    "desc": "'Create account' switch is reachable by keyboard",
+    "pass": false,
+    "detail": ""
+  },
+  {
+    "id": "UI-05",
+    "desc": "Failed login shows an error alert",
+    "pass": true,
+    "detail": "Invalid email or password"
+  },
+  {
+    "id": "UI-06",
+    "desc": "Student sees candidate dashboard (tracker + open jobs)",
+    "pass": false,
+    "detail": "page says 'This dashboard is coming soon.'"
+  },
+  {
+    "id": "UI-10",
+    "desc": "Company job cards show Edit and Delete buttons",
+    "pass": false,
+    "detail": "edit=0 delete=0"
+  },
+  {
+    "id": "UI-11",
+    "desc": "Company sees the Active/Closed status filter",
+    "pass": false,
+    "detail": ""
+  },
+  {
+    "id": "UI-12",
+    "desc": "New job form validates required fields",
+    "pass": true,
+    "detail": "Title must be at least 3 characters | Description must be at least 10 characters | Add at least one skill"
+  },
+  {
+    "id": "UI-13",
+    "desc": "No uncaught JavaScript errors",
+    "pass": true,
+    "detail": ""
+  }
+]

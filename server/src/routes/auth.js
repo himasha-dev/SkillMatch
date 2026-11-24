@@ -2,10 +2,11 @@ import { Router } from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { User } from "../models.js";
-import { auth, wrap } from "../middleware.js";
+import { auth, wrap, createLoginLimiter } from "../middleware.js";
 import { validateRegistration, sendInvalid } from "../validators.js";
 
 const router = Router();
+const limiter = createLoginLimiter();
 const tokenFor = (u) =>
   jwt.sign({ id: u._id, role: u.role }, process.env.JWT_SECRET, { expiresIn: "7d" });
 const publicUser = (u) => ({
@@ -37,14 +38,18 @@ router.post(
 
 router.post(
   "/login",
+  limiter.guard,
   wrap(async (req, res) => {
     const email = String(req.body.email || "").trim().toLowerCase();
     const password = String(req.body.password || "");
     if (!email || !password)
       return res.status(400).json({ message: "Email and password are required" });
     const user = await User.findOne({ email });
-    if (!user || !(await bcrypt.compare(password, user.password)))
+    if (!user || !(await bcrypt.compare(password, user.password))) {
+      limiter.fail(req);
       return res.status(401).json({ message: "Invalid email or password" });
+    }
+    limiter.succeed(req);
     res.json({ token: tokenFor(user), user: publicUser(user) });
   }),
 );

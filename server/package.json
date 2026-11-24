@@ -4,7 +4,14 @@
   "type": "module",
   "scripts": {
     "dev": "node --watch src/index.js",
-    "start": "node src/index.js"
+    "start": "node src/index.js",
+    "seed": "node scripts/seed.js",
+    "test": "node --test \"tests/unit/**/*.test.js\" \"tests/api/**/*.test.js\"",
+    "test:unit": "node --test \"tests/unit/**/*.test.js\"",
+    "test:api": "node --test \"tests/api/**/*.test.js\"",
+    "test:integration": "node --test --test-concurrency=1 \"tests/integration/**/*.test.js\"",
+    "pretest:coverage": "node -e \"require('fs').mkdirSync('coverage',{recursive:true})\"",
+    "test:coverage": "node --test --experimental-test-coverage --test-coverage-include=\"src/**\" --test-coverage-exclude=\"src/index.js\" --test-reporter=spec --test-reporter-destination=stdout --test-reporter=lcov --test-reporter-destination=coverage/lcov.info --test-reporter=junit --test-reporter-destination=coverage/junit.xml \"tests/unit/**/*.test.js\" \"tests/api/**/*.test.js\""
   },
   "dependencies": {
     "bcryptjs": "^3.0.2",
@@ -13,5 +20,8 @@
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.15.0"
+  },
+  "engines": {
+    "node": ">=22"
   }
 }

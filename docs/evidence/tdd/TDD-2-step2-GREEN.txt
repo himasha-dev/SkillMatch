@@ -1,0 +1,297 @@
+TAP version 13
+# Subtest: TDD-2 canWithdraw(status)
+    # Subtest: TDD-2 an application that is 'submitted' can be withdrawn
+    ok 1 - TDD-2 an application that is 'submitted' can be withdrawn
+      ---
+      duration_ms: 0.518829
+      type: 'test'
+      ...
+    # Subtest: TDD-2 an application that is 'reviewing' can be withdrawn
+    ok 2 - TDD-2 an application that is 'reviewing' can be withdrawn
+      ---
+      duration_ms: 0.0666
+      type: 'test'
+      ...
+    # Subtest: TDD-2 an application that is 'shortlisted' can be withdrawn
+    ok 3 - TDD-2 an application that is 'shortlisted' can be withdrawn
+      ---
+      duration_ms: 0.051567
+      type: 'test'
+      ...
+    # Subtest: TDD-2 an application that is 'interview' can be withdrawn
+    ok 4 - TDD-2 an application that is 'interview' can be withdrawn
+      ---
+      duration_ms: 0.046907
+      type: 'test'
+      ...
+    # Subtest: TDD-2 an application that is 'offered' cannot be withdrawn
+    ok 5 - TDD-2 an application that is 'offered' cannot be withdrawn
+      ---
+      duration_ms: 0.052832
+      type: 'test'
+      ...
+    # Subtest: TDD-2 an application that is 'rejected' cannot be withdrawn
+    ok 6 - TDD-2 an application that is 'rejected' cannot be withdrawn
+      ---
+      duration_ms: 0.039503
+      type: 'test'
+      ...
+    # Subtest: TDD-2 an application that is 'withdrawn' cannot be withdrawn
+    ok 7 - TDD-2 an application that is 'withdrawn' cannot be withdrawn
+      ---
+      duration_ms: 0.040694
+      type: 'test'
+      ...
+    # Subtest: TDD-2 an unknown status cannot be withdrawn
+    ok 8 - TDD-2 an unknown status cannot be withdrawn
+      ---
+      duration_ms: 0.133255
+      type: 'test'
+      ...
+    1..8
+ok 1 - TDD-2 canWithdraw(status)
+  ---
+  duration_ms: 1.689042
+  type: 'suite'
+  ...
+1..1
+# tests 8
+# suites 1
+# pass 8
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 166.545917
+TAP version 13
+# Subtest: Decision table DT-1: POST /api/applications
+    # Subtest: DT-APP-R1 no profile -> 400 'Complete your qualification profile first'
+    ok 1 - DT-APP-R1 no profile -> 400 'Complete your qualification profile first'
+      ---
+      duration_ms: 32.998866
+      type: 'test'
+      ...
+    # Subtest: DT-APP-R2 profile, note too long -> 400
+    ok 2 - DT-APP-R2 profile, note too long -> 400
+      ---
+      duration_ms: 3.670315
+      type: 'test'
+      ...
+    # Subtest: DT-APP-R3 profile, note ok, job missing or closed -> 404 'Job is unavailable'
+    ok 3 - DT-APP-R3 profile, note ok, job missing or closed -> 404 'Job is unavailable'
+      ---
+      duration_ms: 2.895626
+      type: 'test'
+      ...
+    # Subtest: DT-APP-R4 profile, note ok, job active, deadline passed -> 400
+    ok 4 - DT-APP-R4 profile, note ok, job active, deadline passed -> 400
+      ---
+      duration_ms: 2.280682
+      type: 'test'
+      ...
+    # Subtest: DT-APP-R5 all conditions true -> 201 with initial timeline entry
+    ok 5 - DT-APP-R5 all conditions true -> 201 with initial timeline entry
+      ---
+      duration_ms: 2.596846
+      type: 'test'
+      ...
+    # Subtest: DT-APP-R5b job with no deadline -> 201
+    ok 6 - DT-APP-R5b job with no deadline -> 201
+      ---
+      duration_ms: 2.204015
+      type: 'test'
+      ...
+    # Subtest: DT-APP-R6 already applied (unique index) -> 409
+    ok 7 - DT-APP-R6 already applied (unique index) -> 409
+      ---
+      duration_ms: 2.192034
+      type: 'test'
+      ...
+    # Subtest: DT-APP-R7 only students may apply -> 403
+    ok 8 - DT-APP-R7 only students may apply -> 403
+      ---
+      duration_ms: 1.892836
+      type: 'test'
+      ...
+    1..8
+ok 1 - Decision table DT-1: POST /api/applications
+  ---
+  duration_ms: 55.679286
+  type: 'suite'
+  ...
+# Subtest: Boundary Value Analysis - cover note length (max 1000)
+    # Subtest: BVA-NOTE length 999 -> 201
+    ok 1 - BVA-NOTE length 999 -> 201
+      ---
+      duration_ms: 3.426616
+      type: 'test'
+      ...
+    # Subtest: BVA-NOTE length 1000 -> 201
+    ok 2 - BVA-NOTE length 1000 -> 201
+      ---
+      duration_ms: 4.154796
+      type: 'test'
+      ...
+    # Subtest: BVA-NOTE length 1001 -> 400
+    ok 3 - BVA-NOTE length 1001 -> 400
+      ---
+      duration_ms: 1.649434
+      type: 'test'
+      ...
+    # Subtest: BVA-NOTE 1001 chars of which 1 is surrounding whitespace -> accepted (trimmed first)
+    ok 4 - BVA-NOTE 1001 chars of which 1 is surrounding whitespace -> accepted (trimmed first)
+      ---
+      duration_ms: 1.659086
+      type: 'test'
+      ...
+    1..4
+ok 2 - Boundary Value Analysis - cover note length (max 1000)
+  ---
+  duration_ms: 11.077901
+  type: 'suite'
+  ...
+# Subtest: Boundary Value Analysis - application deadline
+    # Subtest: BVA-DL-01 deadline 1 second in the past -> rejected
+    ok 1 - BVA-DL-01 deadline 1 second in the past -> rejected
+      ---
+      duration_ms: 1.781602
+      type: 'test'
+      ...
+    # Subtest: BVA-DL-02 deadline 1 minute in the future -> accepted
+    ok 2 - BVA-DL-02 deadline 1 minute in the future -> accepted
+      ---
+      duration_ms: 1.526035
+      type: 'test'
+      ...
+    1..2
+ok 3 - Boundary Value Analysis - application deadline
+  ---
+  duration_ms: 3.413034
+  type: 'suite'
+  ...
+# Subtest: GET /api/applications
+    # Subtest: API-APL-01 student sees only their own applications
+    ok 1 - API-APL-01 student sees only their own applications
+      ---
+      duration_ms: 10.271592
+      type: 'test'
+      ...
+    # Subtest: API-APL-02 student without profile gets an empty list (student: null)
+    ok 2 - API-APL-02 student without profile gets an empty list (student: null)
+      ---
+      duration_ms: 1.830157
+      type: 'test'
+      ...
+    # Subtest: API-APL-03 company sees applications for its own listings only
+    ok 3 - API-APL-03 company sees applications for its own listings only
+      ---
+      duration_ms: 5.019235
+      type: 'test'
+      ...
+    # Subtest: API-APL-04 admin sees all applications
+    ok 4 - API-APL-04 admin sees all applications
+      ---
+      duration_ms: 1.55238
+      type: 'test'
+      ...
+    1..4
+ok 4 - GET /api/applications
+  ---
+  duration_ms: 18.848451
+  type: 'suite'
+  ...
+# Subtest: PATCH /api/applications/:id/status
+    # Subtest: API-STS-01 owner company moves application to interview -> 200 and timeline entry
+    ok 1 - API-STS-01 owner company moves application to interview -> 200 and timeline entry
+      ---
+      duration_ms: 6.692127
+      type: 'test'
+      ...
+    # Subtest: API-STS-02 default note is generated
+    ok 2 - API-STS-02 default note is generated
+      ---
+      duration_ms: 1.850865
+      type: 'test'
+      ...
+    # Subtest: API-STS-03 invalid status (including 'withdrawn') -> 400
+    ok 3 - API-STS-03 invalid status (including 'withdrawn') -> 400
+      ---
+      duration_ms: 14.993142
+      type: 'test'
+      ...
+    # Subtest: API-STS-04 another company -> 403
+    ok 4 - API-STS-04 another company -> 403
+      ---
+      duration_ms: 1.410585
+      type: 'test'
+      ...
+    # Subtest: API-STS-05 withdrawn application cannot be changed -> 400
+    ok 5 - API-STS-05 withdrawn application cannot be changed -> 400
+      ---
+      duration_ms: 1.457319
+      type: 'test'
+      ...
+    # Subtest: API-STS-06 missing application -> 404; student role -> 403
+    ok 6 - API-STS-06 missing application -> 404; student role -> 403
+      ---
+      duration_ms: 2.454838
+      type: 'test'
+      ...
+    1..6
+ok 5 - PATCH /api/applications/:id/status
+  ---
+  duration_ms: 29.081146
+  type: 'suite'
+  ...
+# Subtest: PATCH /api/applications/:id/withdraw and DELETE /api/applications/:id
+    # Subtest: API-WDR-01 student withdraws own submitted application -> 200
+    ok 1 - API-WDR-01 student withdraws own submitted application -> 200
+      ---
+      duration_ms: 3.621916
+      type: 'test'
+      ...
+    # Subtest: API-WDR-03 (TDD-2) offered / rejected / withdrawn applications cannot be withdrawn -> 400, nothing saved
+    ok 2 - API-WDR-03 (TDD-2) offered / rejected / withdrawn applications cannot be withdrawn -> 400, nothing saved
+      ---
+      duration_ms: 3.351312
+      type: 'test'
+      ...
+    # Subtest: API-WDR-02 someone else's application -> 404
+    ok 3 - API-WDR-02 someone else's application -> 404
+      ---
+      duration_ms: 1.300807
+      type: 'test'
+      ...
+    # Subtest: API-DLA-01 student deletes own application -> 200
+    ok 4 - API-DLA-01 student deletes own application -> 200
+      ---
+      duration_ms: 1.268963
+      type: 'test'
+      ...
+    # Subtest: API-DLA-02 deleting someone else's application -> 404
+    ok 5 - API-DLA-02 deleting someone else's application -> 404
+      ---
+      duration_ms: 1.477457
+      type: 'test'
+      ...
+    # Subtest: API-DLA-03 company cannot delete applications -> 403
+    ok 6 - API-DLA-03 company cannot delete applications -> 403
+      ---
+      duration_ms: 1.199073
+      type: 'test'
+      ...
+    1..6
+ok 6 - PATCH /api/applications/:id/withdraw and DELETE /api/applications/:id
+  ---
+  duration_ms: 12.427678
+  type: 'suite'
+  ...
+1..6
+# tests 30
+# suites 6
+# pass 30
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 356.297383

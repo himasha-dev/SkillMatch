@@ -1,0 +1,49 @@
+BDD PRE-CHECK - executed with a minimal Gherkin runner (not part of the repo) because @cucumber/cucumber
+cannot be installed in the offline sandbox. Same .feature files and step definitions; the official
+cucumber-js run happens in GitHub Actions (job: integration-bdd) - see the cucumber-report artifact.
+Run on: Mon Nov 23 09:07:42 UTC 2026
+
+Feature: Apply for an internship  (features/apply_for_internship.feature)
+  PASS Scenario: Candidate applies before the deadline
+    ✔ Given I am a logged-in candidate with a completed profile
+    ✔ Given an active internship "QA Automation Intern" that closes in 5 days
+    ✔ When I apply to "QA Automation Intern" with the cover note "I enjoy breaking things safely"
+    ✔ Then my application is accepted
+    ✔ And the application status is "submitted"
+    ✔ And the application history starts with "Application submitted"
+  PASS Scenario: Candidate cannot apply after the deadline
+    ✔ Given I am a logged-in candidate with a completed profile
+    ✔ Given an active internship "Data Intern" that closed 1 day ago
+    ✔ When I apply to "Data Intern" with the cover note "Better late than never"
+    ✔ Then my application is refused with status 400 and message "The application deadline has passed"
+  PASS Scenario: Cover note length limit [999, 201]
+    ✔ Given I am a logged-in candidate with a completed profile
+    ✔ Given an active internship "Backend Intern" that closes in 5 days
+    ✔ When I apply to "Backend Intern" with a cover note of 999 characters
+    ✔ Then the response status is 201
+  PASS Scenario: Cover note length limit [1000, 201]
+    ✔ Given I am a logged-in candidate with a completed profile
+    ✔ Given an active internship "Backend Intern" that closes in 5 days
+    ✔ When I apply to "Backend Intern" with a cover note of 1000 characters
+    ✔ Then the response status is 201
+  PASS Scenario: Cover note length limit [1001, 400]
+    ✔ Given I am a logged-in candidate with a completed profile
+    ✔ Given an active internship "Backend Intern" that closes in 5 days
+    ✔ When I apply to "Backend Intern" with a cover note of 1001 characters
+    ✔ Then the response status is 400
+
+Feature: Withdraw an application  (features/withdraw_application.feature)
+  PASS Scenario: Withdraw an application that is still being reviewed
+    ✔ Given I am a logged-in candidate with a completed profile
+    ✔ Given I have an application for "Frontend Intern" with status "reviewing"
+    ✔ When I withdraw my application for "Frontend Intern"
+    ✔ Then the response status is 200
+    ✔ And the application status is "withdrawn"
+  PASS Scenario: An offered application cannot be withdrawn
+    ✔ Given I am a logged-in candidate with a completed profile
+    ✔ Given I have an application for "Java Intern" with status "offered"
+    ✔ When I withdraw my application for "Java Intern"
+    ✔ Then my application is refused with status 400 and message "An application that is offered cannot be withdrawn"
+    ✔ And the application status is "offered"
+
+7 scenarios (7 passed, 0 failed), 32 steps passed

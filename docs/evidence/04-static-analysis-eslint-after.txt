@@ -1,0 +1,23 @@
+{'no-nested-ternary': 3, 'max-lines-per-function': 6, 'complexity': 8, 'no-console': 4, 'no-unused-vars': 1} 22
+client/src/main.jsx 12 no-nested-ternary Do not nest ternary expressions.
+client/src/pages/Auth.jsx 23 max-lines-per-function Function 'Auth' has too many lines (107). Maximum allowed is 80.
+client/src/pages/Company.jsx 9 max-lines-per-function Function 'Company' has too many lines (95). Maximum allowed is 80.
+client/src/pages/JobBrowser.jsx 7 max-lines-per-function Function 'JobBrowser' has too many lines (139). Maximum allowed is 80.
+client/src/pages/JobBrowser.jsx 7 complexity Function 'JobBrowser' has a complexity of 15. Maximum allowed is 10.
+client/src/pages/JobBrowser.jsx 86 no-nested-ternary Do not nest ternary expressions.
+client/src/pages/JobDetail.jsx 6 complexity Function 'JobDetail' has a complexity of 13. Maximum allowed is 10.
+client/src/pages/JobForm.jsx 7 complexity Function 'validate' has a complexity of 11. Maximum allowed is 10.
+client/src/pages/JobForm.jsx 20 max-lines-per-function Function 'JobForm' has too many lines (111). Maximum allowed is 80.
+client/src/pages/JobForm.jsx 127 no-nested-ternary Do not nest ternary expressions.
+client/src/pages/Profile.jsx 15 max-lines-per-function Function 'Profile' has too many lines (97). Maximum allowed is 80.
+client/src/pages/Student.jsx 48 max-lines-per-function Function 'Student' has too many lines (151). Maximum allowed is 80.
+client/src/pages/Student.jsx 48 complexity Function 'Student' has a complexity of 14. Maximum allowed is 10.
+server/src/index.js 7 no-console Unexpected console statement.
+server/src/index.js 16 no-console Unexpected console statement.
+server/src/index.js 18 no-console Unexpected console statement.
+server/src/middleware.js 38 no-unused-vars 'next' is defined but never used.
+server/src/middleware.js 56 no-console Unexpected console statement.
+server/src/routes/applications.js 18 complexity Async arrow function has a complexity of 12. Maximum allowed is 10.
+server/src/routes/internships.js 46 complexity Async arrow function has a complexity of 12. Maximum allowed is 10.
+server/src/validators.js 15 complexity Function 'validateRegistration' has a complexity of 13. Maximum allowe
+server/src/validators.js 29 complexity Function 'validateInternship' has a complexity of 21. Maximum allowed 

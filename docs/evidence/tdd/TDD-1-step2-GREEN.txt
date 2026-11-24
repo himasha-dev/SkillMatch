@@ -1,0 +1,53 @@
+TAP version 13
+# Subtest: TDD-1 listing deadline must not be in the past (server side)
+    # Subtest: TDD-1a rejects yesterday's date
+    ok 1 - TDD-1a rejects yesterday's date
+      ---
+      duration_ms: 1.153306
+      type: 'test'
+      ...
+    # Subtest: TDD-1b rejects a date a year ago
+    ok 2 - TDD-1b rejects a date a year ago
+      ---
+      duration_ms: 0.132477
+      type: 'test'
+      ...
+    # Subtest: TDD-1c accepts today's date (boundary)
+    ok 3 - TDD-1c accepts today's date (boundary)
+      ---
+      duration_ms: 0.116074
+      type: 'test'
+      ...
+    # Subtest: TDD-1d accepts tomorrow
+    ok 4 - TDD-1d accepts tomorrow
+      ---
+      duration_ms: 0.057848
+      type: 'test'
+      ...
+    # Subtest: TDD-1e still reports an unparseable date as invalid, not as past
+    ok 5 - TDD-1e still reports an unparseable date as invalid, not as past
+      ---
+      duration_ms: 0.054829
+      type: 'test'
+      ...
+    # Subtest: TDD-1f no deadline (open-ended listing) is allowed
+    ok 6 - TDD-1f no deadline (open-ended listing) is allowed
+      ---
+      duration_ms: 0.080611
+      type: 'test'
+      ...
+    1..6
+ok 1 - TDD-1 listing deadline must not be in the past (server side)
+  ---
+  duration_ms: 2.188134
+  type: 'suite'
+  ...
+1..1
+# tests 6
+# suites 1
+# pass 6
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 166.11779

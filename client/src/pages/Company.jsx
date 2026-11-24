@@ -47,6 +47,7 @@ export default function Company() {
 
       <h2>Your job listings</h2>
       <JobBrowser
+        mode="company"
         reloadKey={reloadKey}
         onTotal={setTotal}
         onView={(j) => setViewId(j._id)}
