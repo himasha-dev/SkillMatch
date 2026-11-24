@@ -29,14 +29,24 @@ const type = async (xpath, text) => {
 };
 const click = async (xpath) => {
   const el = await visible(xpath);
-  await driver.wait(until.elementIsEnabled(el), TIMEOUT);
+
+  await driver.wait(
+    until.elementIsEnabled(el),
+    TIMEOUT
+  );
 
   await driver.executeScript(
     "arguments[0].scrollIntoView({block: 'center'});",
     el
   );
 
+  console.log("[DEBUG] Clicking:", xpath);
+  console.log("[DEBUG] Element:", await el.getText());
+
   await el.click();
+
+  console.log("[DEBUG] Click completed:", xpath);
+  console.log("[DEBUG] Current URL:", await driver.getCurrentUrl());
 };
 // Wait for a toast with this exact text (an older toast may still be on screen).
 const expectToast = (text) => visible(`${L.toast}[normalize-space(.)='${text}']`);
