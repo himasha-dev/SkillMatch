@@ -10,3 +10,7 @@ qa/node_modules/
 performance/results/*.jtl
 performance/results/html-report/
 .scannerwork/
+# local debugging leftovers
+selenium-debug*/
+performance/results/merged-test/
+client/dist/

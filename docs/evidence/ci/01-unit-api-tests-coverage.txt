@@ -1,0 +1,342 @@
+# Unit + API tests with coverage (213 tests)
+# Source: GitHub Actions run 45540382861 (qa/combined-testing, commit 8040cb4, 2026-11-25)
+# https://github.com/himasha-dev/SkillMatch/actions/runs/45540382861
+
+$ set -o pipefail
+
+> skillmatch-server@1.0.0 pretest:coverage
+> node -e "require('fs').mkdirSync('coverage',{recursive:true})"
+
+
+> skillmatch-server@1.0.0 test:coverage
+> node --test --experimental-test-coverage --test-coverage-include="src/**" --test-coverage-exclude="src/index.js" --test-reporter=spec --test-reporter-destination=stdout --test-reporter=lcov --test-reporter-destination=coverage/lcov.info --test-reporter=junit --test-reporter-destination=coverage/junit.xml "tests/unit/**/*.test.js" "tests/api/**/*.test.js"
+
+(node:2484) MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 end listeners added to [TestsStream]. MaxListeners is 10. Use emitter.setMaxListeners() to increase limit
+(Use `node --trace-warnings ...` to show where the warning was created)
+▶ Decision table DT-1: POST /api/applications
+  ✔ DT-APP-R1 no profile -> 400 'Complete your qualification profile first' (74.738297ms)
+  ✔ DT-APP-R2 profile, note too long -> 400 (9.707647ms)
+  ✔ DT-APP-R3 profile, note ok, job missing or closed -> 404 'Job is unavailable' (14.174947ms)
+  ✔ DT-APP-R4 profile, note ok, job active, deadline passed -> 400 (10.915872ms)
+  ✔ DT-APP-R5 all conditions true -> 201 with initial timeline entry (10.725439ms)
+  ✔ DT-APP-R5b job with no deadline -> 201 (10.337025ms)
+  ✔ DT-APP-R6 already applied (unique index) -> 409 (7.977913ms)
+  ✔ DT-APP-R8 internship id that is not a valid ObjectId -> 400 'Choose a valid job' (42.597337ms)
+  ✔ DT-APP-R7 only students may apply -> 403 (25.551968ms)
+✔ Decision table DT-1: POST /api/applications (214.687528ms)
+▶ Re-applying to a job (client shows 'Apply now' again after a withdrawal)
+  ✔ API-RAP-01 re-applying after withdrawing reopens the same application -> 201 (26.16427ms)
+  ✔ API-RAP-02 applying twice while the first is still open -> 409 with a clear message (15.605239ms)
+✔ Re-applying to a job (client shows 'Apply now' again after a withdrawal) (42.117992ms)
+▶ Boundary Value Analysis - cover note length (max 1000)
+  ✔ BVA-NOTE length 999 -> 201 (25.613629ms)
+  ✔ BVA-NOTE length 1000 -> 201 (11.024794ms)
+  ✔ BVA-NOTE length 1001 -> 400 (12.828738ms)
+  ✔ BVA-NOTE 1001 chars of which 1 is surrounding whitespace -> accepted (trimmed first) (6.747045ms)
+✔ Boundary Value Analysis - cover note length (max 1000) (56.730882ms)
+▶ Boundary Value Analysis - application deadline
+  ✔ BVA-DL-01 deadline 1 second in the past -> rejected (7.404206ms)
+  ✔ BVA-DL-02 deadline 1 minute in the future -> accepted (6.624185ms)
+✔ Boundary Value Analysis - application deadline (14.340932ms)
+▶ GET /api/applications
+  ✔ API-APL-01 student sees only their own applications (5.003043ms)
+  ✔ API-APL-02 student without profile gets an empty list (student: null) (4.658978ms)
+  ✔ API-APL-03 company sees applications for its own listings only (5.633348ms)
+  ✔ API-APL-04 admin sees all applications (3.41056ms)
+✔ GET /api/applications (19.17958ms)
+▶ PATCH /api/applications/:id/status
+  ✔ API-STS-01 owner company moves application to interview -> 200 and timeline entry (11.680099ms)
+  ✔ API-STS-02 default note is generated (7.110994ms)
+  ✔ API-STS-03 invalid status (including 'withdrawn') -> 400 (18.692366ms)
+  ✔ API-STS-04 another company -> 403 (7.112364ms)
+  ✔ API-STS-05 withdrawn application cannot be changed -> 400 (6.870419ms)
+  ✔ API-STS-06 missing application -> 404; student role -> 403 (6.960906ms)
+✔ PATCH /api/applications/:id/status (59.227462ms)
+▶ PATCH /api/applications/:id/withdraw and DELETE /api/applications/:id
+  ✔ API-WDR-01 student withdraws own submitted application -> 200 (5.817922ms)
+  ✔ API-WDR-03 (TDD-2) offered / rejected / withdrawn applications cannot be withdrawn -> 400, nothing saved (9.998382ms)
+  ✔ API-WDR-02 someone else's application -> 404 (11.948683ms)
+  ✔ API-DLA-01 student deletes own application -> 200 (4.008313ms)
+  ✔ API-DLA-02 deleting someone else's application -> 404 (4.58812ms)
+  ✔ API-DLA-03 company cannot delete applications -> 403 (4.156975ms)
+✔ PATCH /api/applications/:id/withdraw and DELETE /api/applications/:id (41.133149ms)
+▶ POST /api/auth/register
+  ✔ API-REG-01 valid student registration -> 201, token, normalised email, hashed password (1600.184984ms)
+  ✔ API-REG-02 company registration stores trimmed organization (674.778691ms)
+  ✔ API-REG-03 invalid input -> 400 with per-field errors, nothing saved (8.442842ms)
+  ✔ API-REG-04 duplicate email -> 409 (6.752427ms)
+  ✔ API-REG-05 malformed JSON body -> 400 (not 500) (11.136216ms)
+  ✔ API-REG-06 body larger than the 100kb limit -> 413 (not 500) (7.22646ms)
+✔ POST /api/auth/register (2318.425165ms)
+▶ POST /api/auth/login
+  ✔ API-LOG-01 correct credentials -> 200 with token and public user (13.301988ms)
+  ✔ API-LOG-02 wrong password -> 401 generic message (9.08263ms)
+  ✔ API-LOG-03 unknown email -> same 401 message (no user enumeration) (4.688507ms)
+  ✔ API-LOG-04 missing email or password -> 400 (10.139111ms)
+✔ POST /api/auth/login (48.557295ms)
+▶ GET /api/auth/me
+  ✔ API-ME-01 returns the logged-in user (10.636491ms)
+  ✔ API-ME-02 no token -> 401 (4.943028ms)
+✔ GET /api/auth/me (15.900645ms)
+▶ general
+  ✔ API-GEN-01 health check (8.383145ms)
+  ✔ API-GEN-02 unknown route -> 404 JSON (6.924153ms)
+✔ general (18.241085ms)
+▶ GET /api/internships (list)
+  ✔ API-LST-01 student only sees active listings (75.972959ms)
+  ✔ API-LST-02 company only sees its own listings, and can filter closed ones (9.718421ms)
+  ✔ API-LST-03 student cannot use status=closed to see closed listings (8.287706ms)
+  ✔ API-LST-04 search is case-insensitive and regex characters are escaped (10.036834ms)
+  ✔ API-LST-05 location is an exact, case-insensitive match; degree filter passed through (6.800824ms)
+  ✔ API-LST-06 unknown sort falls back to newest (9.455184ms)
+  ✔ API-LST-07 sort=gpa sorts by lowest minimum GPA (6.880314ms)
+  ✔ BVA-LIM-01 limit=-5 -> limit 1 (8.694183ms)
+  ✔ BVA-LIM-02 limit=1 -> limit 1 (9.740582ms)
+  ✔ BVA-LIM-03 limit=50 -> limit 50 (9.784604ms)
+  ✔ BVA-LIM-04 limit=51 -> limit 50 (6.870158ms)
+  ✔ BVA-LIM-05 no limit -> default 12 -> limit 12 (12.357076ms)
+  ✔ BVA-LIM-06 limit=0 is clamped to the minimum of 1 (6.59161ms)
+  ✔ BVA-PG-01 page=0 and page=-1 are treated as page 1 (skip 0) (13.845203ms)
+  ✔ BVA-PG-02 page=3, limit=5 skips 10 and reports total pages (4.570457ms)
+  ✔ API-LST-08 unauthenticated -> 401 (11.36405ms)
+✔ GET /api/internships (list) (223.144063ms)
+▶ GET /api/internships/:id
+  ✔ API-GET-01 invalid id -> 400 (10.842726ms)
+  ✔ API-GET-02 missing -> 404 (5.18912ms)
+  ✔ API-GET-03 company viewing another company's listing -> 403 (4.929749ms)
+  ✔ API-GET-04 student viewing a closed listing -> 404 (28.022396ms)
+  ✔ API-GET-05 student viewing an active listing -> 200 (16.50761ms)
+  ✔ API-GET-06 owner company viewing its closed listing -> 200 (8.073862ms)
+✔ GET /api/internships/:id (74.239515ms)
+▶ POST /api/internships (create)
+  ✔ API-CRT-01 company creates listing -> 201, skills cleaned, owner forced to caller (22.039202ms)
+  ✔ API-CRT-02 student cannot create listings -> 403 (7.128168ms)
+  ✔ API-CRT-03 invalid listing -> 400 with field errors (4.292497ms)
+✔ POST /api/internships (create) (35.328828ms)
+▶ PUT /api/internships/:id (update)
+  ✔ API-UPD-01 owner updates -> 200, query scoped to owner, validators on (4.493252ms)
+  ✔ API-UPD-02 not owner / missing -> 404 (4.190064ms)
+  ✔ API-UPD-03 invalid partial update -> 400 (3.387791ms)
+✔ PUT /api/internships/:id (update) (12.373288ms)
+▶ DELETE /api/internships/:id
+  ✔ API-DEL-01 owner deletes -> listing, matches and applications removed (4.092499ms)
+  ✔ API-DEL-02 not owner -> 404 and nothing cascaded (3.787348ms)
+✔ DELETE /api/internships/:id (8.112148ms)
+▶ A01 Broken Access Control
+  ✔ SEC-A01-01 every protected endpoint rejects anonymous requests with 401 (164.961318ms)
+  ✔ SEC-A01-02 vertical escalation: a student cannot create, edit or delete listings or change statuses (31.727137ms)
+  ✔ SEC-A01-03 horizontal escalation: company B cannot read, edit, delete or decide on company A's data (40.979363ms)
+  ✔ SEC-A01-04 a user cannot self-register as admin (9.828853ms)
+  ✔ SEC-A01-05 forged JWTs are rejected: alg=none, tampered role, wrong secret (10.632794ms)
+✔ A01 Broken Access Control (265.369226ms)
+▶ A03 Injection
+  ✔ SEC-A03-01 login: NoSQL operator in email is neutralised (coerced to string) (15.626623ms)
+  ✔ SEC-A03-02 search: regex metacharacters cannot build a catastrophic pattern (ReDoS) (7.713758ms)
+  ✔ SEC-A03-03 Mongoose passes a query operator through when it is used as an _id (risk confirmed) (3.641512ms)
+  ✔ SEC-A03-04 apply: an operator object as the internship id is rejected before querying (8.397962ms)
+✔ A03 Injection (35.853271ms)
+▶ A05 Security Misconfiguration
+  ✔ SEC-A05-01 framework fingerprint header X-Powered-By is not sent (6.410718ms)
+  ✔ SEC-A05-02 basic hardening headers are present (2.53008ms)
+  ✔ SEC-A05-03 CORS only allows the configured client origin (4.085812ms)
+  ✔ SEC-A05-04 server errors do not leak stack traces (5.77297ms)
+✔ A05 Security Misconfiguration (19.209731ms)
+▶ A07 Identification and Authentication Failures
+  ✔ SEC-A07-01 weak passwords are refused at registration (8.319642ms)
+  ✔ SEC-A07-02 repeated failed logins are throttled (brute-force protection) (86.691972ms)
+✔ A07 Identification and Authentication Failures (95.254579ms)
+▶ /api/students/profile
+  ✔ API-PRF-01 student with no profile yet gets null (68.650591ms)
+  ✔ API-PRF-02 PUT upserts a cleaned profile for the logged-in user only (31.635194ms)
+  ✔ API-PRF-05 location omitted -> defaults to 'Remote'; experience kept as a number (12.11108ms)
+  ✔ API-PRF-03 invalid profile -> 400 and no write (8.362244ms)
+  ✔ API-PRF-04 company cannot use the student profile API -> 403 (4.220545ms)
+✔ /api/students/profile (137.207965ms)
+▶ createApp
+  ✔ UT-APP-01 without CLIENT_URL the API allows the Vite dev origin http://localhost:5173 (57.050024ms)
+✔ createApp (58.343361ms)
+▶ createLoginLimiter
+  ✔ WB-LIM-01 allows up to `max` failures, blocks the next attempt with 429 + Retry-After (2.012612ms)
+  ✔ WB-LIM-02 the block expires after the window (0.253414ms)
+  ✔ WB-LIM-03 a successful login clears the counter (0.258441ms)
+  ✔ WB-LIM-04 counters are per IP and per (case-insensitive) email (0.208612ms)
+  ✔ WB-LIM-05 missing body/email does not crash (0.17043ms)
+✔ createLoginLimiter (4.400481ms)
+▶ securityHeaders
+  ✔ WB-HDR-01 sets hardening headers and calls next() (0.239753ms)
+✔ securityHeaders (0.380769ms)
+▶ auth middleware
+  ✔ WB-AUTH-01 no Authorization header -> 401 (1.459732ms)
+  ✔ WB-AUTH-02 malformed token -> 401 Invalid or expired token (0.727712ms)
+  ✔ WB-AUTH-03 token signed with a different secret -> 401 (3.298935ms)
+  ✔ WB-AUTH-04 expired token -> 401 (0.734504ms)
+  ✔ WB-AUTH-05 valid token but user deleted -> 401 User no longer exists (1.12795ms)
+  ✔ WB-AUTH-06 valid token -> req.user set (password excluded) and next() called (1.50482ms)
+✔ auth middleware (10.031152ms)
+▶ allow (role guard)
+  ✔ WB-ALW-01 permitted role calls next() (0.300392ms)
+  ✔ WB-ALW-02 other role -> 403 (0.231059ms)
+✔ allow (role guard) (0.661004ms)
+▶ validId
+  ✔ WB-VID-01 valid ObjectId passes (0.40426ms)
+  ✔ WB-VID-02 invalid id -> 400 (0.211218ms)
+✔ validId (0.732408ms)
+▶ wrap + error handling
+  ✔ WB-WRP-01 forwards a rejected promise to next(err) (0.40005ms)
+  ✔ WB-ERR-01 Mongoose ValidationError -> 400 with field map (0.318636ms)
+  ✔ WB-ERR-02 CastError -> 400 (0.187091ms)
+  ✔ WB-ERR-03 duplicate key (11000) -> 409 (0.186157ms)
+  ✔ WB-ERR-04 unknown error -> 500 without leaking details (0.214517ms)
+  ✔ WB-ERR-05 notFound -> 404 naming the route (0.279614ms)
+✔ wrap + error handling (1.824737ms)
+▶ TDD-1 listing deadline must not be in the past (server side)
+  ✔ TDD-1a rejects yesterday's date (1.794816ms)
+  ✔ TDD-1b rejects a date a year ago (0.213461ms)
+  ✔ TDD-1c accepts today's date (boundary) (0.165136ms)
+  ✔ TDD-1d accepts tomorrow (0.152453ms)
+  ✔ TDD-1e still reports an unparseable date as invalid, not as past (0.136936ms)
+  ✔ TDD-1f no deadline (open-ended listing) is allowed (0.131385ms)
+✔ TDD-1 listing deadline must not be in the past (server side) (4.159676ms)
+▶ TDD-1 refactor: checkDeadline with a fixed clock
+  ✔ TDD-1g 2026-11-22T23:59:59Z is past (0.206147ms)
+  ✔ TDD-1h 2026-11-23 (start of today) is allowed (0.130159ms)
+  ✔ TDD-1i empty value is allowed (0.120359ms)
+✔ TDD-1 refactor: checkDeadline with a fixed clock (0.656632ms)
+▶ TDD-2 canWithdraw(status)
+  ✔ TDD-2 an application that is 'submitted' can be withdrawn (1.071504ms)
+  ✔ TDD-2 an application that is 'reviewing' can be withdrawn (0.111381ms)
+  ✔ TDD-2 an application that is 'shortlisted' can be withdrawn (0.077187ms)
+  ✔ TDD-2 an application that is 'interview' can be withdrawn (0.070084ms)
+  ✔ TDD-2 an application that is 'offered' cannot be withdrawn (0.097369ms)
+  ✔ TDD-2 an application that is 'rejected' cannot be withdrawn (0.067891ms)
+  ✔ TDD-2 an application that is 'withdrawn' cannot be withdrawn (0.068588ms)
+  ✔ TDD-2 an unknown status cannot be withdrawn (0.08638ms)
+✔ TDD-2 canWithdraw(status) (3.319538ms)
+▶ TDD-2 refactor: status lists derive from the model
+  ✔ TDD-2r open + final statuses cover every model status exactly once (0.890974ms)
+  ✔ TDD-2r companies can set every status except 'withdrawn' (0.192055ms)
+✔ TDD-2 refactor: status lists derive from the model (1.215821ms)
+▶ Equivalence Partitioning - registration password
+  ✔ EP-PW-01 valid: >=8 chars with letters and digits (1.181928ms)
+  ✔ EP-PW-02 invalid: shorter than 8 (0.194084ms)
+  ✔ EP-PW-03 invalid: letters only (0.141426ms)
+  ✔ EP-PW-04 invalid: digits only (0.100065ms)
+  ✔ EP-PW-05 invalid: not a string (0.09127ms)
+  ✔ EP-PW-06 invalid: missing (0.08534ms)
+✔ Equivalence Partitioning - registration password (3.122691ms)
+▶ Equivalence Partitioning - account role / organization
+  ✔ EP-RL-01 valid: student without organization (1.099052ms)
+  ✔ EP-RL-02 valid: company with organization (0.177767ms)
+  ✔ EP-RL-03 invalid: company with blank organization (0.172143ms)
+  ✔ EP-RL-04 invalid: self-registering as admin is rejected (0.166018ms)
+  ✔ EP-RL-05 invalid: missing role (0.141071ms)
+✔ Equivalence Partitioning - account role / organization (2.049193ms)
+▶ Equivalence Partitioning - email
+  ✔ EP-EM-01 valid address (surrounding spaces trimmed) (0.254974ms)
+  ✔ EP-EM-02 invalid: "no-at-sign.com" (0.140864ms)
+  ✔ EP-EM-03 invalid: "a@b" (0.094268ms)
+  ✔ EP-EM-04 invalid: "a b@c.com" (0.09383ms)
+  ✔ EP-EM-05 invalid: "" (0.087544ms)
+  ✔ EP-EM-06 invalid: non-string (object) is rejected, not coerced (0.135613ms)
+✔ Equivalence Partitioning - email (1.120039ms)
+▶ Equivalence Partitioning - profile GPA
+  ✔ EP-GPA-01 valid: number inside 0..4 (0.42267ms)
+  ✔ EP-GPA-02 valid: numeric string inside 0..4 (0.162337ms)
+  ✔ EP-GPA-03 invalid: below range (0.144706ms)
+  ✔ EP-GPA-04 invalid: above range (0.093149ms)
+  ✔ EP-GPA-05 invalid: non-numeric text (0.106757ms)
+  ✔ EP-GPA-06 invalid: empty string (0.107045ms)
+  ✔ EP-GPA-07 invalid: null (0.074459ms)
+✔ Equivalence Partitioning - profile GPA (1.551112ms)
+▶ Equivalence Partitioning - non-numeric types for numeric fields
+  ✔ EP-GPA-08 invalid: boolean true is not a GPA (0.149786ms)
+  ✔ EP-GPA-09 invalid: array is not a GPA (0.091308ms)
+  ✔ EP-OPN-01 invalid: boolean true is not a number of openings (0.312043ms)
+  ✔ EP-OPN-02 invalid: empty array minimumGpa is rejected (0.116643ms)
+✔ Equivalence Partitioning - non-numeric types for numeric fields (0.839788ms)
+▶ Boundary Value Analysis - GPA (0..4)
+  ✔ BVA-GPA profile gpa=-0.01 -> rejected (0.25665ms)
+  ✔ BVA-GPA internship minimumGpa=-0.01 -> rejected (0.105768ms)
+  ✔ BVA-GPA profile gpa=0 -> accepted (0.068404ms)
+  ✔ BVA-GPA internship minimumGpa=0 -> accepted (0.068617ms)
+  ✔ BVA-GPA profile gpa=0.01 -> accepted (0.062084ms)
+  ✔ BVA-GPA internship minimumGpa=0.01 -> accepted (0.065301ms)
+  ✔ BVA-GPA profile gpa=3.99 -> accepted (0.059247ms)
+  ✔ BVA-GPA internship minimumGpa=3.99 -> accepted (0.065079ms)
+  ✔ BVA-GPA profile gpa=4 -> accepted (0.068431ms)
+  ✔ BVA-GPA internship minimumGpa=4 -> accepted (0.066646ms)
+  ✔ BVA-GPA profile gpa=4.01 -> rejected (0.062631ms)
+  ✔ BVA-GPA internship minimumGpa=4.01 -> rejected (0.060995ms)
+✔ Boundary Value Analysis - GPA (0..4) (1.41969ms)
+▶ Boundary Value Analysis - password length (min 8)
+  ✔ BVA-PW length 7 -> rejected (0.158692ms)
+  ✔ BVA-PW length 8 -> accepted (0.068862ms)
+  ✔ BVA-PW length 9 -> accepted (0.062311ms)
+✔ Boundary Value Analysis - password length (min 8) (0.410835ms)
+▶ Boundary Value Analysis - internship text and openings
+  ✔ BVA-TTL title length 2 -> rejected (0.389286ms)
+  ✔ BVA-TTL title length 3 -> accepted (0.07564ms)
+  ✔ BVA-TTL title length 4 -> accepted (0.066013ms)
+  ✔ BVA-DSC description length 9 -> rejected (0.135131ms)
+  ✔ BVA-DSC description length 10 -> accepted (0.067927ms)
+  ✔ BVA-DSC description length 11 -> accepted (0.065899ms)
+  ✔ BVA-OPN openings=0 -> rejected (0.099254ms)
+  ✔ BVA-OPN openings=1 -> accepted (0.118328ms)
+  ✔ BVA-OPN openings=2 -> accepted (0.094267ms)
+  ✔ BVA-OPN openings=1.5 -> rejected (0.064458ms)
+  ✔ BVA-NAME name length 1 -> rejected (0.100759ms)
+  ✔ BVA-NAME name length 2 -> accepted (0.068709ms)
+  ✔ BVA-NAME name length 3 -> accepted (0.059174ms)
+✔ Boundary Value Analysis - internship text and openings (1.787944ms)
+▶ Boundary Value Analysis - experience months
+  ✔ BVA-EXP -1 rejected (0.192262ms)
+  ✔ BVA-EXP 0 accepted (0.120937ms)
+  ✔ BVA-EXP 600 accepted (schema maximum) (0.09574ms)
+✔ Boundary Value Analysis - experience months (0.53232ms)
+▶ validateInternship - other rules
+  ✔ UT-INT-01 a complete valid listing has no errors (0.15865ms)
+  ✔ UT-INT-02 requires at least one skill (0.091507ms)
+  ✔ UT-INT-03 rejects skills that are not an array (0.083508ms)
+  ✔ UT-INT-04 rejects an unknown degree (0.095794ms)
+  ✔ UT-INT-05 rejects an unparseable deadline (0.103311ms)
+  ✔ UT-INT-06 partial update only checks the fields sent (0.131582ms)
+  ✔ UT-INT-07 partial update still validates a field that is sent (0.096763ms)
+✔ validateInternship - other rules (0.986514ms)
+▶ validateProfile - other rules
+  ✔ UT-PRF-01 complete valid profile has no errors (0.1429ms)
+  ✔ UT-PRF-02 rejects unknown degree (0.091412ms)
+  ✔ UT-PRF-03 requires field of study (min 2 chars) (0.085374ms)
+  ✔ UT-PRF-04 requires at least one skill (0.087094ms)
+  ✔ UT-PRF-05 missing field of study is reported (not a crash) (0.083235ms)
+✔ validateProfile - other rules (0.65951ms)
+▶ helpers
+  ✔ UT-SKL-01 cleanSkills trims, drops blanks and removes duplicates (0.295674ms)
+  ✔ UT-SKL-02 cleanSkills tolerates non-arrays (0.089375ms)
+  ✔ UT-RGX-01 escapeRegex neutralises regex metacharacters (0.155924ms)
+✔ helpers (0.683505ms)
+ℹ tests 213
+ℹ suites 44
+ℹ pass 213
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ start of coverage report
+ℹ ------------------------------------------------------------------
+ℹ file              | line % | branch % | funcs % | uncovered lines
+ℹ ------------------------------------------------------------------
+ℹ src               |        |          |         | 
+ℹ  app.js           | 100.00 |   100.00 |  100.00 | 
+ℹ  middleware.js    | 100.00 |   100.00 |  100.00 | 
+ℹ  models.js        | 100.00 |   100.00 |  100.00 | 
+ℹ  routes           |        |          |         | 
+ℹ   applications.js | 100.00 |   100.00 |  100.00 | 
+ℹ   auth.js         | 100.00 |   100.00 |  100.00 | 
+ℹ   internships.js  | 100.00 |   100.00 |  100.00 | 
+ℹ   students.js     | 100.00 |   100.00 |  100.00 | 
+ℹ  rules.js         | 100.00 |   100.00 |  100.00 | 
+ℹ  validators.js    | 100.00 |   100.00 |  100.00 | 
+ℹ ------------------------------------------------------------------
+ℹ all files         | 100.00 |   100.00 |  100.00 | 
+ℹ ------------------------------------------------------------------
+ℹ end of coverage report

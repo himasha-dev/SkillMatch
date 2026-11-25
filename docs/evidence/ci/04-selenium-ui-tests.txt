@@ -1,0 +1,49 @@
+# Selenium WebDriver UI tests (headless Chrome)
+# Source: GitHub Actions run 45540382861 (qa/combined-testing, commit 8040cb4, 2026-11-25)
+# https://github.com/himasha-dev/SkillMatch/actions/runs/45540382861
+
+$ npm install --no-audit --no-fund
+
+added 163 packages in 1s
+
+> e2e
+> node --test --test-concurrency=1 "e2e/**/*.test.js"
+
+TAP version 13
+# Subtest: Authentication UI
+    # Subtest: E2E-01 login page loads with the SkillMatch branding
+    ok 1 - E2E-01 login page loads with the SkillMatch branding
+    # Subtest: E2E-02 registration form shows inline validation errors without calling the API
+    ok 2 - E2E-02 registration form shows inline validation errors without calling the API
+    # Subtest: E2E-03 wrong password shows the server's error message
+    ok 3 - E2E-03 wrong password shows the server's error message
+    1..3
+ok 1 - Authentication UI
+# Subtest: Company: job listing CRUD
+    # Subtest: E2E-04 company logs in and sees its dashboard with Edit/Delete actions
+    ok 1 - E2E-04 company logs in and sees its dashboard with Edit/Delete actions
+    # Subtest: E2E-05 company publishes a new listing (CREATE) and it appears in the list (READ)
+    ok 2 - E2E-05 company publishes a new listing (CREATE) and it appears in the list (READ)
+    # Subtest: E2E-06 company edits the listing (UPDATE)
+    ok 3 - E2E-06 company edits the listing (UPDATE)
+    # Subtest: E2E-07 company deletes the listing after confirming (DELETE)
+    ok 4 - E2E-07 company deletes the listing after confirming (DELETE)
+    1..4
+ok 2 - Company: job listing CRUD
+# Subtest: Candidate: search and apply
+    # Subtest: E2E-08 candidate sees the candidate dashboard (regression test for BUG-01)
+    ok 1 - E2E-08 candidate sees the candidate dashboard (regression test for BUG-01)
+    # Subtest: E2E-09 candidate searches, applies with a cover note and sees it in the tracker
+    ok 2 - E2E-09 candidate searches, applies with a cover note and sees it in the tracker
+    # Subtest: E2E-10 job details modal opens and closes with Escape (regression test for BUG-12)
+    ok 3 - E2E-10 job details modal opens and closes with Escape (regression test for BUG-12)
+    1..3
+ok 3 - Candidate: search and apply
+1..3
+# tests 10
+# suites 3
+# pass 10
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0

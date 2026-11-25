@@ -1,0 +1,10 @@
+# BDD - Cucumber scenarios
+# Source: GitHub Actions run 45540382861 (qa/combined-testing, commit 8040cb4, 2026-11-25)
+# https://github.com/himasha-dev/SkillMatch/actions/runs/45540382861
+
+$ npx cucumber-js
+Cannot use 'progress-bar' formatter for output to 'stdout' as not a TTY. Switching to 'progress' formatter.
+
+7 scenarios (7 passed)
+32 steps (32 passed)
+0m00.145s (executing steps: 0m00.103s)

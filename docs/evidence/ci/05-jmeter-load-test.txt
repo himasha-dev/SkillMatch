@@ -1,0 +1,25 @@
+# JMeter load test - 50 users, 30 s ramp-up, 120 s
+# Source: GitHub Actions run 45540382861 (qa/combined-testing, commit 8040cb4, 2026-11-25)
+# https://github.com/himasha-dev/SkillMatch/actions/runs/45540382861
+
+$ jmeter -n -t performance/skillmatch-load-test.jmx \
+WARN StatusConsoleListener The use of package scanning to locate plugins is deprecated and will be removed in a future release
+WARN StatusConsoleListener The use of package scanning to locate plugins is deprecated and will be removed in a future release
+WARN StatusConsoleListener The use of package scanning to locate plugins is deprecated and will be removed in a future release
+WARN StatusConsoleListener The use of package scanning to locate plugins is deprecated and will be removed in a future release
+Nov 25, 2026 3:30:49 AM java.util.prefs.FileSystemPreferences$1 run
+INFO: Created user preferences directory.
+Creating summariser <summary>
+Created the tree successfully using performance/skillmatch-load-test.jmx
+Starting standalone test @ 2026 Nov 25 03:30:49 UTC (1795577449604)
+Waiting for possible Shutdown/StopTestNow/HeapDump/ThreadDump message on port 4445
+summary +    152 in 00:00:10 =   14.7/s Avg:    97 Min:     0 Max:   331 Err:     0 (0.00%) Active: 18 Started: 18 Finished: 0
+summary +   2133 in 00:00:30 =   71.2/s Avg:    47 Min:     0 Max:   322 Err:     0 (0.00%) Active: 50 Started: 50 Finished: 0
+summary =   2285 in 00:00:40 =   56.6/s Avg:    51 Min:     0 Max:   331 Err:     0 (0.00%)
+summary +   2984 in 00:00:30 =   99.5/s Avg:     2 Min:     0 Max:    10 Err:     0 (0.00%) Active: 50 Started: 50 Finished: 0
+summary =   5269 in 00:01:10 =   74.9/s Avg:    23 Min:     0 Max:   331 Err:     0 (0.00%)
+summary +   2973 in 00:00:30 =   99.1/s Avg:     2 Min:     0 Max:    14 Err:     0 (0.00%) Active: 50 Started: 50 Finished: 0
+summary =   8242 in 00:01:40 =   82.2/s Avg:    15 Min:     0 Max:   331 Err:     0 (0.00%)
+summary +   1966 in 00:00:20 =   99.6/s Avg:     2 Min:     0 Max:     9 Err:     0 (0.00%) Active: 0 Started: 50 Finished: 50
+summary =  10208 in 00:02:00 =   85.0/s Avg:    13 Min:     0 Max:   331 Err:     0 (0.00%)
+Tidying up ...    @ 2026 Nov 25 03:32:49 UTC (1795577569737)

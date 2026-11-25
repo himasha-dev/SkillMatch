@@ -1,0 +1,45 @@
+# Integration tests against a real MongoDB 7
+# Source: GitHub Actions run 45540382861 (qa/combined-testing, commit 8040cb4, 2026-11-25)
+# https://github.com/himasha-dev/SkillMatch/actions/runs/45540382861
+
+$ npm run test:integration
+
+> skillmatch-server@1.0.0 test:integration
+> node --test --test-concurrency=1 "tests/integration/**/*.test.js"
+
+TAP version 13
+# Subtest: Integration: full hiring flow on a real MongoDB
+    # Subtest: IT-01 registers a company and a student
+    ok 1 - IT-01 registers a company and a student
+    # Subtest: IT-02 duplicate email is refused by the API and by the unique index
+    ok 2 - IT-02 duplicate email is refused by the API and by the unique index
+    # Subtest: IT-03 login works with the stored bcrypt hash; wrong password is 401
+    ok 3 - IT-03 login works with the stored bcrypt hash; wrong password is 401
+    # Subtest: IT-04 company creates two listings; one is then closed
+    ok 4 - IT-04 company creates two listings; one is then closed
+    # Subtest: IT-05 schema validators run on update (openings above the 1000 max -> 400)
+    ok 5 - IT-05 schema validators run on update (openings above the 1000 max -> 400)
+    # Subtest: IT-06 student sees only the active listing, and search finds it
+    ok 6 - IT-06 student sees only the active listing, and search finds it
+    # Subtest: IT-07 applying before creating a profile is refused
+    ok 7 - IT-07 applying before creating a profile is refused
+    # Subtest: IT-08 profile upsert, then schema max on experienceMonths (601 -> 400)
+    ok 8 - IT-08 profile upsert, then schema max on experienceMonths (601 -> 400)
+    # Subtest: IT-09 student applies; a second application is 409; a closed listing is 404
+    ok 9 - IT-09 student applies; a second application is 409; a closed listing is 404
+    # Subtest: IT-10 company sees the application and shortlists it
+    ok 10 - IT-10 company sees the application and shortlists it
+    # Subtest: IT-11 student withdraws, then re-applies (same record reopened)
+    ok 11 - IT-11 student withdraws, then re-applies (same record reopened)
+    # Subtest: IT-12 deleting a listing cascades to its applications
+    ok 12 - IT-12 deleting a listing cascades to its applications
+    1..12
+ok 1 - Integration: full hiring flow on a real MongoDB
+1..1
+# tests 12
+# suites 1
+# pass 12
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
