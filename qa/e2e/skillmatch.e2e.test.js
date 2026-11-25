@@ -27,32 +27,17 @@ const type = async (xpath, text) => {
   await el.clear();
   await el.sendKeys(text);
 };
+// Real mouse click; falls back to a DOM click if an overlay (e.g. a fading toast) intercepts it.
 const click = async (xpath) => {
   const el = await visible(xpath);
-
-  await driver.wait(
-    until.elementIsEnabled(el),
-    TIMEOUT
-  );
-
-  await driver.executeScript(
-    "arguments[0].scrollIntoView({block: 'center'});",
-    el
-  );
-
-  console.log("[DEBUG] Clicking:", xpath);
-  console.log("[DEBUG] Element:", await el.getText());
-
-  const tag = await el.getTagName();
-
-if (tag === "button") {
-  await el.sendKeys(Key.ENTER);
-} else {
-  await el.click();
-}
-
-  console.log("[DEBUG] Click completed:", xpath);
-  console.log("[DEBUG] Current URL:", await driver.getCurrentUrl());
+  await driver.wait(until.elementIsEnabled(el), TIMEOUT);
+  await driver.executeScript("arguments[0].scrollIntoView({block: 'center'});", el);
+  try {
+    await el.click();
+  } catch (e) {
+    if (!/intercepted|not interactable/i.test(e.message)) throw e;
+    await driver.executeScript("arguments[0].click();", el);
+  }
 };
 // Wait for a toast with this exact text (an older toast may still be on screen).
 const expectToast = (text) => visible(`${L.toast}[normalize-space(.)='${text}']`);
@@ -72,7 +57,20 @@ async function shot(name) {
 }
 
 before(async () => {
-  const options = new chrome.Options().addArguments("--window-size=1280,900", "--no-sandbox", "--disable-dev-shm-usage");
+  const options = new chrome.Options().addArguments(
+    "--window-size=1280,900",
+    "--no-sandbox",
+    "--disable-dev-shm-usage",
+    // The seed password is a known-breached one, so Chrome would open its "Change your password"
+    // dialog after login. That browser dialog swallows clicks and keystrokes and made CI flaky.
+    "--disable-features=PasswordLeakDetection,PasswordCheck,PasswordManagerOnboarding",
+    "--disable-save-password-bubble",
+  );
+  options.setUserPreferences({
+    credentials_enable_service: false,
+    "profile.password_manager_enabled": false,
+    "profile.password_manager_leak_detection": false,
+  });
   if (process.env.HEADLESS !== "false") options.addArguments("--headless=new");
   driver = await new Builder().forBrowser("chrome").setChromeOptions(options).build();
 });
